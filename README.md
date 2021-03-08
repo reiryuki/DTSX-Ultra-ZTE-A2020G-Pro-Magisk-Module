@@ -1,0 +1,1 @@
+# DTSX-Ultra-ZTE-A2020G-Pro-Magisk-Module
