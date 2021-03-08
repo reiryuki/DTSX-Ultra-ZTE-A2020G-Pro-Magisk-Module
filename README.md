@@ -17,6 +17,7 @@
 
 ## Requirements
 - Android 8.0, 8.1, 9, 10, or 11
+- Magisk installed
 
 ## Tested on
 - Android 10 arm64 CrDroid ROM
