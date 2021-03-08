@@ -38,7 +38,6 @@
 - @Michi_Nemuritor
 - @guitardedhero
 - @JohnFawkes
-- @Zackptg5
 - @UltraM8
 - @lazerl0rd
 - scrubber
