@@ -10,9 +10,6 @@
 - Any global type soundfx but different case in different ROM/vendor/kernel
 - PUBG Mobile (no support for this)
 
-## Compatible with
-- Sound Enhancement Sony Xperia, MusicFX AOSP, AudioFX LineageOS, and any post process type soundfx
-
 ## Requirements
 - Android 11, 10, 9, or 8
 - Magisk installed
