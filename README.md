@@ -30,7 +30,7 @@
 ## Troubleshootings
 - https://t.me/audioryukimods/3107
 
-## Report Guide
+## Bug Report
 - https://t.me/audioryukimods/2618
 
 ## Credits and contributors
