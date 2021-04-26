@@ -14,7 +14,7 @@
 - Sound Enhancement Sony Xperia, MusicFX AOSP, AudioFX LineageOS, and any post process type soundfx
 
 ## Requirements
-- Android 8.0, 8.1, 9, 10, or 11
+- Android 11, 10, 9, or 8
 - Magisk installed
 
 ## Tested on
