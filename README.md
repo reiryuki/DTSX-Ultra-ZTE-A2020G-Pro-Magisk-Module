@@ -7,8 +7,8 @@
 
 ## Not Compatible with
 - Mi Music or any player that forcing compress offload playback
-- Dolby, Moto Waves, AudioFX Moto, Viper, and any global type soundfx (different case in different rom/vendor)
-- PUBG Mobile
+- Any global type soundfx but different case in different ROM/vendor/kernel
+- PUBG Mobile (no support for this)
 
 ## Compatible with
 - Sound Enhancement Sony Xperia, MusicFX AOSP, AudioFX LineageOS, and any post process type soundfx
