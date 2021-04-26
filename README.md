@@ -2,7 +2,7 @@
 
 ## Descriptions
 - An equalizer ported from ZTE A2020G Pro (P855A01)
-- Post process type FX
+- Post process type soundfx
 - Changing build product and product model, may break your platform apps and features functionality
 
 ## Not Compatible with
@@ -43,10 +43,8 @@
 - @aquahol
 - @aip_x
 
-## Thanks for Supports
+## Thanks for Donations
 - https://t.me/audioryukimods/2619
-
-## Donate
 - https://www.paypal.me/reiryuki
 
 ## Download
