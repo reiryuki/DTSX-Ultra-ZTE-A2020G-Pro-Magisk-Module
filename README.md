@@ -3,7 +3,7 @@
 ## Descriptions
 - An equalizer ported from ZTE A2020G Pro (P855A01)
 - Post process type soundfx
-- Changing build product and product model, may break your platform apps and features functionality
+- Changing ro.build.product and ro.product.model, may break your platform apps and features functionality
 
 ## Not Compatible with
 - Mi Music or any player that forcing compress offload playback
