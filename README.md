@@ -25,10 +25,10 @@
 ## Optional
 
 ## Troubleshootings
-- https://t.me/audioryukimods/3107
+- https://t.me/androidryukimodsdiscussions/3107
 
 ## Bug Report
-- https://t.me/audioryukimods/2618
+- https://t.me/androidryukimodsdiscussions/2618
 
 ## Credits and contributors
 - @Michi_Nemuritor
@@ -41,7 +41,7 @@
 - @aip_x
 
 ## Thanks for Donations
-- https://t.me/audioryukimods/2619
+- https://t.me/androidryukimodsdiscussions/2619
 - https://www.paypal.me/reiryuki
 
 ## Download
