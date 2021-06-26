@@ -11,7 +11,7 @@
 - PUBG Mobile (no support for this)
 
 ## Requirements
-- Android 8 until 12
+- Android 9 until 12
 - Magisk installed
 
 ## Tested on
