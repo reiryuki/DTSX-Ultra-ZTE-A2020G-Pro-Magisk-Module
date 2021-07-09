@@ -22,6 +22,10 @@
 - Install Audio Modification Library module if you using other audio mods
 - Reboot (reboot twice without reinstalling if you have Magisk sepolicy.rule bug)
 
+## Tested on
+- CrDroid ROM Android 10 arm64
+- DotOS ROM Android 11 arm64
+
 ## Optional
 
 ## Troubleshootings
