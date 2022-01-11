@@ -20,8 +20,8 @@
 - Reboot (reboot twice without reinstalling if you have Magisk sepolicy.rule bug)
 
 ## Tested on
-- Android 10 arm64 CrDroid ROM
-- Android 11 arm64 DotOS ROM
+- Android 10 CrDroid ROM
+- Android 11 DotOS ROM
 
 ## Optionals
 
