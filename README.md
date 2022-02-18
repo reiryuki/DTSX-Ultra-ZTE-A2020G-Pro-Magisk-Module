@@ -11,7 +11,7 @@
 - PUBG Mobile (no support for this)
 
 ## Requirements
-- Android 9 until 12
+- Android 9 and up
 - Magisk installed
 
 ## Installation Guide
@@ -22,24 +22,23 @@
 ## Tested on
 - Android 10 CrDroid ROM
 - Android 11 DotOS ROM
+- Android 12 Ancient OS ROM
 
-## Optionals
-
-## Troubleshootings
+## Troubleshootings & Optionals
 - https://t.me/androidryukimodsdiscussions/3107
 
 ## Bug Report
 - https://t.me/androidryukimodsdiscussions/2618
 
 ## Credits and contributors
-- DTS Ports Team
-- Android Ryuki Mods Discussions Team
-- https://t.me/androidryukimodsdiscussions/25188
-- scrubber
+- https://t.me/viperatmos
+- DTS Ports Group
+- https://t.me/androidryukimodsdiscussions
+- https://t.me/androidappsportdevelopment
 
 ## Thanks for Donations
 - https://t.me/androidryukimodsdiscussions/2619
 - https://www.paypal.me/reiryuki
 
 ## Download
-- Moved link here: https://www.pling.com/p/1531642/
+- https://www.pling.com/p/1531642/
