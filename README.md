@@ -32,7 +32,6 @@
 
 ## Credits and contributors
 - https://t.me/viperatmos
-- DTS Ports Group
 - https://t.me/androidryukimodsdiscussions
 - https://t.me/androidappsportdevelopment
 
