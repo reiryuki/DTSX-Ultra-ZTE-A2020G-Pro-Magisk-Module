@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Included>
+    <Decoders>
+        <MediaCodec name="OMX.DTS.audio_decoder.dts" type="audio/dts"/>
+    </Decoders>
+</Included>
