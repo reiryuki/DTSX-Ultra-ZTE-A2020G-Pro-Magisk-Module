@@ -53,8 +53,8 @@ dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 u
 allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir { write add_name remove_name }
 dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } blkio_dev dir search
 allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } blkio_dev dir search
-dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { read open search }
-allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { read open search }
+dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { open search }
+allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { open search }
 dontaudit { hal_audio_default mtk_hal_audio audioserver } unlabeled dir { search write add_name }
 allow     { hal_audio_default mtk_hal_audio audioserver } unlabeled dir { search write add_name }
 dontaudit { hal_audio_default mtk_hal_audio audioserver mediacodec mediaserver } vendor_data_file dir { ioctl read write getattr lock add_name remove_name search open }
@@ -312,8 +312,10 @@ dontaudit { hal_audio_default mtk_hal_audio audioserver } audio_prop file read
 allow     { hal_audio_default mtk_hal_audio audioserver } audio_prop file read
 dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
 allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { hal_audio_default_exec mtk_hal_audio_exec audioserver_exec } file getattr
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { hal_audio_default_exec mtk_hal_audio_exec audioserver_exec } file getattr
+dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file open
+allow     { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file open
+dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir read
+allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir read
 dontaudit { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 allow     { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 dontaudit hal_audio_default hal_audio_default capability2 block_suspend
