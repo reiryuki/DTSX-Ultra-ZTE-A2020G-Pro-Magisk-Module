@@ -45,7 +45,7 @@ fi
 
 # audio files
 NAME="*audio*effects*.conf -o -name *audio*effects*.xml -o -name *policy*.conf -o -name *policy*.xml"
-rm -f `find $MODPATH/system -type f $NAME`
+rm -f `find $MODPATH/system -type f -name $NAME`
 A=`find $ETC -maxdepth 1 -type f -name $NAME`
 VA=`find $VETC -maxdepth 1 -type f -name $NAME`
 VOA=`find $OETC -maxdepth 1 -type f -name $NAME`
