@@ -2,6 +2,18 @@
 type vendor_file
 type vendor_configs_file
 
+# debug
+dontaudit system_server system_file file write
+allow     system_server system_file file write
+
+# chcon
+dontaudit vendor_configs_file labeledfs filesystem associate
+allow     vendor_configs_file labeledfs filesystem associate
+dontaudit init vendor_configs_file dir relabelfrom
+allow     init vendor_configs_file dir relabelfrom
+dontaudit init vendor_configs_file file relabelfrom
+allow     init vendor_configs_file file relabelfrom
+
 # sock_file
 dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
 allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
@@ -15,6 +27,8 @@ allow     bufferhubd pdx_performance_client_endpoint_socket_type sock_file { ioc
 # unix_stream_socket
 dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
 allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
+dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
+allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
 dontaudit init pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { create bind }
 allow     init pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { create bind }
 dontaudit bufferhubd pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { read write getattr setattr lock append listen accept getopt setopt shutdown }

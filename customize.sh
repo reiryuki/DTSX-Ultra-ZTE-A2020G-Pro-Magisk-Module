@@ -305,13 +305,17 @@ if [ "$BOOTMODE" == true ]; then
 fi
 }
 detect_soundfx() {
-if [ "$BOOTMODE" == true ]; then
-  if dumpsys media.audio_flinger | grep -Eq $UUID; then
-    ui_print "- $NAME is detected"
-    ui_print "  It may conflicting with this module"
-    ui_print "  Read Github Troubleshootings to disable it"
-    ui_print " "
-  fi
+if [ "$BOOTMODE" == true ]\
+&& dumpsys media.audio_flinger | grep -Eq $UUID; then
+  ui_print "- $NAME is detected."
+  ui_print "  It may be conflicting with this module."
+  ui_print "  You can run terminal:"
+  ui_print " "
+  ui_print "  su"
+  ui_print "  setprop disable.dirac 1"
+  ui_print " "
+  ui_print "  and reinstall this module if you want to disable it."
+  ui_print " "
 fi
 }
 
@@ -320,12 +324,17 @@ hide_oat
 APP="MusicFX
      DTSXULTRA
      AudioWizard
-     MiSound
      SoundAlive_80
      SoundAlive_70"
 for APPS in $APP; do
   hide_app
 done
+if getprop | grep -Eq "disable.dirac\]: \[1" || getprop | grep -Eq "disable.misoundfx\]: \[1"; then
+  APP=MiSound
+  for APPS in $APP; do
+    hide_app
+  done
+fi
 if getprop | grep -Eq "disable.dirac\]: \[1"; then
   APP=DiracAudioControlService
   for APPS in $APP; do
@@ -333,22 +342,16 @@ if getprop | grep -Eq "disable.dirac\]: \[1"; then
   done
 fi
 
-# misoundfx
-NAME=misoundfx
-UUID=5b8e36a5-144a-4c38-b1d7-0002a5d5c51b
+# dirac & misoundfx
+FILE=$MODPATH/.aml.sh
+NAME='dirac soundfx'
+UUID=e069d9e0-8329-11df-9168-0002a5d5c51b
 APP="XiaomiParts
      ZenfoneParts
      ZenParts
      GalaxyParts
-     KharaMeParts"
-ui_print "- $NAME will be disabled"
-check_app
-ui_print " "
-
-# dirac
-FILE=$MODPATH/.aml.sh
-NAME='dirac soundfx'
-UUID=e069d9e0-8329-11df-9168-0002a5d5c51b
+     KharaMeParts
+     DeviceParts"
 if getprop | grep -Eq "disable.dirac\]: \[1"; then
   ui_print "- $NAME will be disabled"
   sed -i 's/#2//g' $FILE
@@ -356,6 +359,28 @@ if getprop | grep -Eq "disable.dirac\]: \[1"; then
   ui_print " "
 else
   detect_soundfx
+fi
+FILE=$MODPATH/.aml.sh
+NAME=misoundfx
+UUID=5b8e36a5-144a-4c38-b1d7-0002a5d5c51b
+if getprop | grep -Eq "disable.misoundfx\]: \[1"; then
+  ui_print "- $NAME will be disabled"
+  sed -i 's/#3//g' $FILE
+  check_app
+  ui_print " "
+else
+  if [ "$BOOTMODE" == true ]\
+  && dumpsys media.audio_flinger | grep -Eq $UUID; then
+    ui_print "- $NAME is detected."
+    ui_print "  It may be conflicting with this module."
+    ui_print "  You can run terminal:"
+    ui_print " "
+    ui_print "  su"
+    ui_print "  setprop disable.misoundfx 1"
+    ui_print " "
+    ui_print "  and reinstall this module if you want to disable it."
+    ui_print " "
+  fi
 fi
 
 # dirac_controller

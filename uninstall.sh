@@ -1,6 +1,3 @@
-(
-
-mount /data
 mount -o rw,remount /data
 MODPATH=${0%/*}
 MODID=`echo "$MODPATH" | sed -n -e 's/\/data\/adb\/modules\///p'`
@@ -18,9 +15,5 @@ rm -rf /persist/magisk/"$MODID"
 rm -rf /data/unencrypted/magisk/"$MODID"
 rm -rf /cache/magisk/"$MODID"
 rm -rf /data/vendor/audio/dts
-
-) 2>/dev/null
-
-
 
 
