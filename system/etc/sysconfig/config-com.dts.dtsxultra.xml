@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <hidden-api-whitelisted-app package="com.dts.dtsxultra"/>
-    <allow-in-power-save package="com.dts.dtsxultra"/>
     <allow-implicit-broadcast action="dts.dtssdk.intent.action.AUDIO_ROUTE_CHANGED"/>
     <allow-implicit-broadcast action="dts.dtssdk.intent.action.GET_DTS_STATE"/>
     <allow-implicit-broadcast action="dts.dtssdk.intent.action.SET_DTS_ENABLED"/>
