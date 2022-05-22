@@ -69,6 +69,7 @@ if [ "$SKU" ]; then
     fi
   done
 fi
+rm -f `find $MODPATH/system -type f -name *policy*volumes*.xml`
 
 # media codecs
 NAME=media_codecs.xml
