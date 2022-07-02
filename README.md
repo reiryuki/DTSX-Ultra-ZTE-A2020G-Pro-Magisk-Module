@@ -4,6 +4,7 @@
 - An equalizer ported from ZTE A2020G Pro (P855A01)
 - Post process type soundfx
 - Changing ro.build.product and ro.product.model, may breaks your platform apps and features functionality.
+- Sources: https://github.com/reiryuki/DTSX-Ultra-ZTE-A2020G-Pro-Magisk-Module/blob/main/module.prop
 
 ## Requirements
 - Android 9 and up
