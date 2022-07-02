@@ -7,6 +7,9 @@ else
   MAGISKTMP=`find /dev -mindepth 2 -maxdepth 2 -type d -name .magisk`
 fi
 
+# optionals
+OPTIONALS=/sdcard/optionals.prop
+
 # info
 MODVER=`grep_prop version $MODPATH/module.prop`
 MODVERCODE=`grep_prop versionCode $MODPATH/module.prop`
@@ -48,7 +51,7 @@ fi
 mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 
 # mod ui
-if getprop | grep -Eq "mod.ui\]: \[1"; then
+if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then
   APP=DtsUltra
   FILE=/sdcard/$APP.apk
   DIR=`find $MODPATH/system -type d -name $APP`
@@ -67,16 +70,12 @@ fi
 
 # cleaning
 ui_print "- Cleaning..."
-APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
 PKG=com.dts.dtsxultra
 if [ "$BOOTMODE" == true ]; then
   for PKGS in $PKG; do
     RES=`pm uninstall $PKGS`
   done
 fi
-for APPS in $APP; do
-  rm -f `find /data/dalvik-cache /data/resource-cache -type f -name *$APPS*.apk`
-done
 rm -rf $MODPATH/unused
 rm -rf /metadata/magisk/$MODID
 rm -rf /mnt/vendor/persist/magisk/$MODID
@@ -129,13 +128,14 @@ fi
 # cleanup
 DIR=/data/adb/modules/$MODID
 FILE=$DIR/module.prop
-if getprop | grep -Eq "dts.cleanup\]: \[1"; then
-  ui_print "- Cleaning-up DTSX Ultra data..."
+if [ "`grep_prop data.cleanup $OPTIONALS`" == 1 ]; then
+  sed -i 's/^data.cleanup=1/data.cleanup=0/' $OPTIONALS
+  ui_print "- Cleaning-up $MODID data..."
   cleanup
   ui_print " "
 elif [ -d $DIR ] && ! grep -Eq "$MODNAME" $FILE; then
   ui_print "- Different version detected"
-  ui_print "  Cleaning-up DTSX Ultra data..."
+  ui_print "  Cleaning-up $MODID data..."
   cleanup
   ui_print " "
 fi
@@ -159,13 +159,9 @@ fi\' $MODPATH/post-fs-data.sh
 }
 
 # permissive
-if getprop | grep -Eq "permissive.mode\]: \[1"; then
+if [ "`grep_prop permissive.mode $OPTIONALS`" == 1 ]; then
   ui_print "- Using permissive method"
   rm -f $MODPATH/sepolicy.rule
-  permissive
-  ui_print " "
-elif getprop | grep -Eq "permissive.mode\]: \[2"; then
-  ui_print "- Using both permissive and SE policy patch"
   permissive
   ui_print " "
 fi
@@ -182,7 +178,7 @@ ui_print " "
 }
 
 # patch
-if getprop | grep -Eq "dts.patch\]: \[1"; then
+if [ "`grep_prop dts.patch $OPTIONALS`" == 1 ]; then
   FILE=`find $MODPATH -type f -name libdts-eagle-shared.so\
         -o -name libdtsdsec.so -o -name libomx-dts.so\
         -o -name service.sh`
@@ -270,7 +266,8 @@ MODDIR=$MODPATH/system/vendor/euclid/product/app/$APPS
 replace_dir
 }
 check_app() {
-if [ "$BOOTMODE" == true ]; then
+if [ "$BOOTMODE" == true ]\
+&& [ "`grep_prop hide.parts $OPTIONALS`" == 1 ]; then
   for APPS in $APP; do
     FILE=`find $MAGISKTMP/mirror/system_root/system\
                $MAGISKTMP/mirror/system_root/product\
@@ -295,17 +292,16 @@ if [ "$BOOTMODE" == true ]\
 && dumpsys media.audio_flinger | grep -Eq $UUID; then
   ui_print "- $NAME is detected."
   ui_print "  It may be conflicting with this module."
-  ui_print "  You can run terminal:"
-  ui_print " "
-  ui_print "  su"
-  ui_print "  setprop disable.dirac 1"
-  ui_print " "
+  ui_print "  You can type:"
+  ui_print "  disable.dirac=1"
+  ui_print "  inside $OPTIONALS"
   ui_print "  and reinstall this module if you want to disable it."
   ui_print " "
 fi
 }
 
 # hide
+APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
 hide_oat
 APP="MusicFX
      DTSXULTRA
@@ -315,13 +311,14 @@ APP="MusicFX
 for APPS in $APP; do
   hide_app
 done
-if getprop | grep -Eq "disable.dirac\]: \[1" || getprop | grep -Eq "disable.misoundfx\]: \[1"; then
+if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]\
+&& [ "`grep_prop disable.misoundfx $OPTIONALS`" == 1 ]; then
   APP=MiSound
   for APPS in $APP; do
     hide_app
   done
 fi
-if getprop | grep -Eq "disable.dirac\]: \[1"; then
+if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
   APP="Dirac DiracAudioControlService"
   for APPS in $APP; do
     hide_app
@@ -332,13 +329,9 @@ fi
 FILE=$MODPATH/.aml.sh
 NAME='dirac soundfx'
 UUID=e069d9e0-8329-11df-9168-0002a5d5c51b
-APP="XiaomiParts
-     ZenfoneParts
-     ZenParts
-     GalaxyParts
-     KharaMeParts
-     DeviceParts"
-if getprop | grep -Eq "disable.dirac\]: \[1"; then
+APP="XiaomiParts ZenfoneParts ZenParts GalaxyParts
+     KharaMeParts DeviceParts PocoParts"
+if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
   ui_print "- $NAME will be disabled"
   sed -i 's/#2//g' $FILE
   check_app
@@ -349,7 +342,7 @@ fi
 FILE=$MODPATH/.aml.sh
 NAME=misoundfx
 UUID=5b8e36a5-144a-4c38-b1d7-0002a5d5c51b
-if getprop | grep -Eq "disable.misoundfx\]: \[1"; then
+if [ "`grep_prop disable.misoundfx $OPTIONALS`" == 1 ]; then
   ui_print "- $NAME will be disabled"
   sed -i 's/#3//g' $FILE
   check_app
@@ -359,11 +352,9 @@ else
   && dumpsys media.audio_flinger | grep -Eq $UUID; then
     ui_print "- $NAME is detected."
     ui_print "  It may be conflicting with this module."
-    ui_print "  You can run terminal:"
-    ui_print " "
-    ui_print "  su"
-    ui_print "  setprop disable.misoundfx 1"
-    ui_print " "
+    ui_print "  You can type:"
+    ui_print "  disable.misoundfx=1"
+    ui_print "  inside $OPTIONALS"
     ui_print "  and reinstall this module if you want to disable it."
     ui_print " "
   fi
@@ -373,7 +364,7 @@ fi
 FILE=$MODPATH/.aml.sh
 NAME='dirac_controller soundfx'
 UUID=b437f4de-da28-449b-9673-667f8b964304
-if getprop | grep -Eq "disable.dirac\]: \[1"; then
+if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
   ui_print "- $NAME will be disabled"
   ui_print " "
 else
@@ -384,7 +375,7 @@ fi
 FILE=$MODPATH/.aml.sh
 NAME='dirac_music soundfx'
 UUID=b437f4de-da28-449b-9673-667f8b9643fe
-if getprop | grep -Eq "disable.dirac\]: \[1"; then
+if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
   ui_print "- $NAME will be disabled"
   ui_print " "
 else
@@ -395,7 +386,7 @@ fi
 FILE=$MODPATH/.aml.sh
 NAME='dirac_gef soundfx'
 UUID=3799D6D1-22C5-43C3-B3EC-D664CF8D2F0D
-if getprop | grep -Eq "disable.dirac\]: \[1"; then
+if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
   ui_print "- $NAME will be disabled"
   ui_print " "
 else
@@ -404,7 +395,7 @@ fi
 
 # stream mode
 FILE=$MODPATH/.aml.sh
-PROP=`getprop stream.mode`
+PROP=`grep_prop stream.mode $OPTIONALS`
 if echo "$PROP" | grep -Eq r; then
   ui_print "- Activating ring stream..."
   sed -i 's/#r//g' $FILE
@@ -428,7 +419,7 @@ fi
 
 # audio rotation
 FILE=$MODPATH/service.sh
-if getprop | grep -Eq "audio.rotation\]: \[1"; then
+if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
   ui_print "- Activating ro.audio.monitorRotation=true"
   sed -i '1i\
 resetprop ro.audio.monitorRotation true' $FILE
@@ -437,7 +428,7 @@ fi
 
 # raw
 FILE=$MODPATH/.aml.sh
-if getprop | grep -Eq "disable.raw\]: \[0"; then
+if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
   ui_print "- Not disabling Ultra Low Latency playback (RAW)"
   ui_print " "
 else
@@ -446,7 +437,7 @@ fi
 
 # other
 FILE=$MODPATH/service.sh
-if getprop | grep -Eq "other.etc\]: \[1"; then
+if [ "`grep_prop other.etc $OPTIONALS`" == 1 ]; then
   ui_print "- Activating other etc files bind mount..."
   sed -i 's/#p//g' $FILE
   ui_print " "
@@ -458,17 +449,6 @@ DIR=`find $MODPATH/system/vendor -type d`
 for DIRS in $DIR; do
   chown 0.2000 $DIRS
 done
-magiskpolicy --live "type vendor_file"
-magiskpolicy --live "type vendor_configs_file"
-magiskpolicy --live "dontaudit { vendor_file vendor_configs_file } labeledfs filesystem associate"
-magiskpolicy --live "allow     { vendor_file vendor_configs_file } labeledfs filesystem associate"
-magiskpolicy --live "dontaudit init { vendor_file vendor_configs_file } dir relabelfrom"
-magiskpolicy --live "allow     init { vendor_file vendor_configs_file } dir relabelfrom"
-magiskpolicy --live "dontaudit init { vendor_file vendor_configs_file } file relabelfrom"
-magiskpolicy --live "allow     init { vendor_file vendor_configs_file } file relabelfrom"
-chcon -R u:object_r:vendor_file:s0 $MODPATH/system/vendor
-chcon -R u:object_r:vendor_configs_file:s0 $MODPATH/system/vendor/etc
-chcon -R u:object_r:vendor_configs_file:s0 $MODPATH/system/vendor/odm/etc
 ui_print " "
 
 # vendor_overlay

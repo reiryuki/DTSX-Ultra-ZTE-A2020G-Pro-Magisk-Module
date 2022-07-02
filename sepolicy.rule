@@ -5,12 +5,12 @@ allow     system_server system_file file write
 # context
 type vendor_file
 type vendor_configs_file
-dontaudit vendor_configs_file labeledfs filesystem associate
-allow     vendor_configs_file labeledfs filesystem associate
-dontaudit init vendor_configs_file dir relabelfrom
-allow     init vendor_configs_file dir relabelfrom
-dontaudit init vendor_configs_file file relabelfrom
-allow     init vendor_configs_file file relabelfrom
+dontaudit { vendor_file vendor_configs_file } labeledfs filesystem associate
+allow     { vendor_file vendor_configs_file } labeledfs filesystem associate
+dontaudit init { vendor_file vendor_configs_file } dir relabelfrom
+allow     init { vendor_file vendor_configs_file } dir relabelfrom
+dontaudit init { vendor_file vendor_configs_file } file relabelfrom
+allow     init { vendor_file vendor_configs_file } file relabelfrom
 
 # sock_file
 dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
@@ -316,6 +316,7 @@ dontaudit proc_net proc filesystem associate
 allow     proc_net proc filesystem associate
 
 # additional
+allow { hal_audio_default mtk_hal_audio audioserver } system_suspend_hwservice hwservice_manager find
 dontaudit { hal_audio_default mtk_hal_audio audioserver } { default_prop boottime_prop } file { read open getattr map }
 allow     { hal_audio_default mtk_hal_audio audioserver } { default_prop boottime_prop } file { read open getattr map }
 dontaudit { hal_audio_default mtk_hal_audio audioserver } { mnt_vendor_file system_prop } file { read open getattr }

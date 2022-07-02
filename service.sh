@@ -29,9 +29,6 @@ resetprop vendor.dts.audio.allow_offload true
 #resetprop vendor.dts.audio.set_bypass true
 #resetprop vendor.dts.audio.dump_driver true
 
-# restart
-killall audioserver
-
 # wait
 sleep 20
 
@@ -68,10 +65,9 @@ if [ -d /my_product/etc ] && [ "$FILE" ]; then
     fi
   done
 fi
-if ( [ `realpath /odm/etc` == /odm/etc ] && [ "$FILE" ] )\
-|| ( [ -d /my_product/etc ] && [ "$FILE" ] ); then
-  killall audioserver
-fi
+
+# restart
+killall audioserver
 
 # wait
 sleep 40
