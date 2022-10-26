@@ -323,12 +323,16 @@ dontaudit { hal_audio_default mtk_hal_audio audioserver } { mnt_vendor_file syst
 allow     { hal_audio_default mtk_hal_audio audioserver } { mnt_vendor_file system_prop } file { read open getattr }
 dontaudit { hal_audio_default mtk_hal_audio audioserver } audio_prop file { read open getattr }
 allow     { hal_audio_default mtk_hal_audio audioserver } audio_prop file { read open getattr }
+dontaudit { hal_audio_default mtk_hal_audio audioserver } radio_prop file read
+allow     { hal_audio_default mtk_hal_audio audioserver } radio_prop file read
 dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
 allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file open
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file open
+dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file { read open }
+allow     { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file { read open }
 dontaudit { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir read
 allow     { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir read
+dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
+allow     { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
 dontaudit { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 allow     { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 dontaudit hal_audio_default hal_audio_default capability2 block_suspend
