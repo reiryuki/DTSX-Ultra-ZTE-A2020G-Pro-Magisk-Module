@@ -10,4 +10,3 @@
     <allow-implicit-broadcast action="dts.dtssdk.intent.action.RECOGNIZED_USB_ACCESSORY_CONNECTED"/>
     <allow-implicit-broadcast action="dts.dtssdk.intent.action.UNRECOGNIZED_USB_ACCESSORY_CONNECTED"/>
 </config>
-
