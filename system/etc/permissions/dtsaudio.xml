@@ -3,4 +3,3 @@
     <library name="dtsaudio"
         file="/system/framework/dtsaudio.jar"/>
 </permissions>
-
