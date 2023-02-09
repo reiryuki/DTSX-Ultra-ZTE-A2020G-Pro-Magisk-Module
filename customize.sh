@@ -33,6 +33,9 @@ fi
 
 # optionals
 OPTIONALS=/sdcard/optionals.prop
+if [ ! -f $OPTIONALS ]; then
+  touch $OPTIONALS
+fi
 
 # info
 MODVER=`grep_prop version $MODPATH/module.prop`
@@ -73,6 +76,14 @@ if [ "$BOOTMODE" != true ]; then
   mount -o rw -t auto /dev/block/bootdevice/by-name/metadata /metadata
 fi
 
+# sepolicy
+FILE=$MODPATH/sepolicy.rule
+DES=$MODPATH/sepolicy.pfsd
+if [ "`grep_prop sepolicy.sh $OPTIONALS`" == 1 ]\
+&& [ -f $FILE ]; then
+  mv -f $FILE $DES
+fi
+
 # .aml.sh
 mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 
@@ -96,10 +107,10 @@ fi
 
 # cleaning
 ui_print "- Cleaning..."
-PKG=com.dts.dtsxultra
+PKG=`cat $MODPATH/package.txt`
 if [ "$BOOTMODE" == true ]; then
   for PKGS in $PKG; do
-    RES=`pm uninstall $PKGS`
+    RES=`pm uninstall $PKGS 2>/dev/null`
   done
 fi
 rm -rf $MODPATH/unused
@@ -276,128 +287,14 @@ DIR=$VENDOR/euclid/product/app/$APPS
 MODDIR=$MODPATH/system/vendor/euclid/product/app/$APPS
 replace_dir
 }
-check_app() {
-if [ "$BOOTMODE" == true ]\
-&& [ "`grep_prop hide.parts $OPTIONALS`" == 1 ]; then
-  for APPS in $APP; do
-    FILE=`find $SYSTEM $PRODUCT $SYSTEM_EXT $VENDOR\
-               $MY_PRODUCT -type f -name $APPS.apk`
-    if [ "$FILE" ]; then
-      ui_print "  Checking $APPS.apk"
-      ui_print "  Please wait..."
-      if grep -Eq $UUID $FILE; then
-        ui_print "  Your $APPS.apk will be hidden"
-        hide_app
-      fi
-    fi
-  done
-fi
-}
-detect_soundfx() {
-if [ "$BOOTMODE" == true ]\
-&& dumpsys media.audio_flinger | grep -Eq $UUID; then
-  ui_print "- $NAME is detected."
-  ui_print "  It may be conflicting with this module."
-  ui_print "  You can type:"
-  ui_print "  disable.dirac=1"
-  ui_print "  inside $OPTIONALS"
-  ui_print "  and reinstall this module if you want to disable it."
-  ui_print " "
-fi
-}
 
 # hide
 APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
 hide_oat
-APP="MusicFX
-     DTSXULTRA
-     AudioWizard
-     SoundAlive_80
-     SoundAlive_70"
+APP="MusicFX DTSXULTRA AudioWizard"
 for APPS in $APP; do
   hide_app
 done
-if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]\
-&& [ "`grep_prop disable.misoundfx $OPTIONALS`" == 1 ]; then
-  APP=MiSound
-  for APPS in $APP; do
-    hide_app
-  done
-fi
-if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
-  APP="Dirac DiracAudioControlService"
-  for APPS in $APP; do
-    hide_app
-  done
-fi
-
-# dirac & misoundfx
-FILE=$MODPATH/.aml.sh
-NAME='dirac soundfx'
-UUID=e069d9e0-8329-11df-9168-0002a5d5c51b
-APP="XiaomiParts ZenfoneParts ZenParts GalaxyParts
-     KharaMeParts DeviceParts PocoParts"
-if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
-  ui_print "- $NAME will be disabled"
-  sed -i 's/#2//g' $FILE
-  check_app
-  ui_print " "
-else
-  detect_soundfx
-fi
-FILE=$MODPATH/.aml.sh
-NAME=misoundfx
-UUID=5b8e36a5-144a-4c38-b1d7-0002a5d5c51b
-if [ "`grep_prop disable.misoundfx $OPTIONALS`" == 1 ]; then
-  ui_print "- $NAME will be disabled"
-  sed -i 's/#3//g' $FILE
-  check_app
-  ui_print " "
-else
-  if [ "$BOOTMODE" == true ]\
-  && dumpsys media.audio_flinger | grep -Eq $UUID; then
-    ui_print "- $NAME is detected."
-    ui_print "  It may be conflicting with this module."
-    ui_print "  You can type:"
-    ui_print "  disable.misoundfx=1"
-    ui_print "  inside $OPTIONALS"
-    ui_print "  and reinstall this module if you want to disable it."
-    ui_print " "
-  fi
-fi
-
-# dirac_controller
-FILE=$MODPATH/.aml.sh
-NAME='dirac_controller soundfx'
-UUID=b437f4de-da28-449b-9673-667f8b964304
-if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
-  ui_print "- $NAME will be disabled"
-  ui_print " "
-else
-  detect_soundfx
-fi
-
-# dirac_music
-FILE=$MODPATH/.aml.sh
-NAME='dirac_music soundfx'
-UUID=b437f4de-da28-449b-9673-667f8b9643fe
-if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
-  ui_print "- $NAME will be disabled"
-  ui_print " "
-else
-  detect_soundfx
-fi
-
-# dirac_gef
-FILE=$MODPATH/.aml.sh
-NAME='dirac_gef soundfx'
-UUID=3799D6D1-22C5-43C3-B3EC-D664CF8D2F0D
-if [ "`grep_prop disable.dirac $OPTIONALS`" == 1 ]; then
-  ui_print "- $NAME will be disabled"
-  ui_print " "
-else
-  detect_soundfx
-fi
 
 # stream mode
 FILE=$MODPATH/.aml.sh
@@ -490,7 +387,8 @@ ui_print " "
 
 # vendor_overlay
 DIR=/product/vendor_overlay
-if [ -d $DIR ]; then
+if [ "`grep_prop fix.vendor_overlay $OPTIONALS`" == 1 ]\
+&& [ -d $DIR ]; then
   ui_print "- Fixing $DIR mount..."
   cp -rf $DIR/*/* $MODPATH/system/vendor
   ui_print " "

@@ -1,8 +1,8 @@
 # DTSX Ultra ZTE A2020G Pro Magisk Module
 
 ## DISCLAIMER
-- DTS Apps and blobs are owned by DTS™.
-- The MIT license specified here is for the Magisk Module, not for DTS apps and blobs.
+- DTS app and blobs are owned by DTS™.
+- The MIT license specified here is for the Magisk Module, not for DTS app and blobs.
 
 ## Descriptions
 - Equalizer soundfx ported from ZTE A2020G Pro (P855A01) and integrated as a Magisk Module for all supported and rooted devices with Magisk
@@ -22,7 +22,7 @@
 - Magisk installed
 
 ## Installation Guide & Download Link
-- Install this module https://www.pling.com/p/1531642/ via Magisk Manager or Recovery
+- Install this module https://www.pling.com/p/1531642/ via Magisk app or Recovery
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
 
