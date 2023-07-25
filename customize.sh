@@ -1,41 +1,16 @@
 # space
-if [ "$BOOTMODE" == true ]; then
+ui_print " "
+
+# log
+if [ "$BOOTMODE" != true ]; then
+  FILE=/sdcard/$MODID\_recovery.log
+  ui_print "- Log will be saved at $FILE"
+  exec 2>$FILE
   ui_print " "
 fi
 
-# magisk
-if [ -d /sbin/.magisk ]; then
-  MAGISKTMP=/sbin/.magisk
-else
-  MAGISKTMP=`realpath /dev/*/.magisk`
-fi
-
-# path
-if [ "$BOOTMODE" == true ]; then
-  MIRROR=$MAGISKTMP/mirror
-else
-  MIRROR=
-fi
-SYSTEM=`realpath $MIRROR/system`
-PRODUCT=`realpath $MIRROR/product`
-VENDOR=`realpath $MIRROR/vendor`
-SYSTEM_EXT=`realpath $MIRROR/system_ext`
-if [ -d $MIRROR/odm ]; then
-  ODM=`realpath $MIRROR/odm`
-else
-  ODM=`realpath /odm`
-fi
-if [ -d $MIRROR/my_product ]; then
-  MY_PRODUCT=`realpath $MIRROR/my_product`
-else
-  MY_PRODUCT=`realpath /my_product`
-fi
-
-# optionals
-OPTIONALS=/sdcard/optionals.prop
-if [ ! -f $OPTIONALS ]; then
-  touch $OPTIONALS
-fi
+# run
+. $MODPATH/function.sh
 
 # info
 MODVER=`grep_prop version $MODPATH/module.prop`
@@ -43,8 +18,15 @@ MODVERCODE=`grep_prop versionCode $MODPATH/module.prop`
 ui_print " ID=$MODID"
 ui_print " Version=$MODVER"
 ui_print " VersionCode=$MODVERCODE"
-ui_print " MagiskVersion=$MAGISK_VER"
-ui_print " MagiskVersionCode=$MAGISK_VER_CODE"
+if [ "$KSU" == true ]; then
+  ui_print " KSUVersion=$KSU_VER"
+  ui_print " KSUVersionCode=$KSU_VER_CODE"
+  ui_print " KSUKernelVersionCode=$KSU_KERNEL_VER_CODE"
+  sed -i 's|#k||g' $MODPATH/post-fs-data.sh
+else
+  ui_print " MagiskVersion=$MAGISK_VER"
+  ui_print " MagiskVersionCode=$MAGISK_VER_CODE"
+fi
 ui_print " "
 
 # sdk
@@ -60,20 +42,40 @@ else
 fi
 
 # bit
-if [ "$IS64BIT" != true ]; then
-  ui_print "- 32 bit"
-  rm -rf `find $MODPATH/system -type d -name *64`
-else
+if [ "$IS64BIT" == true ]; then
   ui_print "- 64 bit"
+else
+  ui_print "- 32 bit"
+  rm -rf `find $MODPATH -type d -name *64*`
 fi
 ui_print " "
 
-# mount
-if [ "$BOOTMODE" != true ]; then
-  mount -o rw -t auto /dev/block/bootdevice/by-name/cust /vendor
-  mount -o rw -t auto /dev/block/bootdevice/by-name/vendor /vendor
-  mount -o rw -t auto /dev/block/bootdevice/by-name/persist /persist
-  mount -o rw -t auto /dev/block/bootdevice/by-name/metadata /metadata
+# recovery
+mount_partitions_in_recovery
+
+# magisk
+magisk_setup
+
+# path
+SYSTEM=`realpath $MIRROR/system`
+PRODUCT=`realpath $MIRROR/product`
+VENDOR=`realpath $MIRROR/vendor`
+SYSTEM_EXT=`realpath $MIRROR/system_ext`
+if [ "$BOOTMODE" == true ]; then
+  if [ ! -d $MIRROR/odm ]; then
+    mount_odm_to_mirror
+  fi
+  if [ ! -d $MIRROR/my_product ]; then
+    mount_my_product_to_mirror
+  fi
+fi
+ODM=`realpath $MIRROR/odm`
+MY_PRODUCT=`realpath $MIRROR/my_product`
+
+# optionals
+OPTIONALS=/sdcard/optionals.prop
+if [ ! -f $OPTIONALS ]; then
+  touch $OPTIONALS
 fi
 
 # sepolicy
@@ -114,11 +116,7 @@ if [ "$BOOTMODE" == true ]; then
   done
 fi
 rm -rf $MODPATH/unused
-rm -rf /metadata/magisk/$MODID
-rm -rf /mnt/vendor/persist/magisk/$MODID
-rm -rf /persist/magisk/$MODID
-rm -rf /data/unencrypted/magisk/$MODID
-rm -rf /cache/magisk/$MODID
+remove_sepolicy_rule
 ui_print " "
 
 # function
@@ -142,6 +140,7 @@ for NAMES in $NAME; do
   rm -rf /persist/magisk/$NAMES
   rm -rf /data/unencrypted/magisk/$NAMES
   rm -rf /cache/magisk/$NAMES
+  rm -rf /cust/magisk/$NAMES
 done
 }
 
@@ -170,7 +169,7 @@ if [ "`grep_prop data.cleanup $OPTIONALS`" == 1 ]; then
   ui_print "- Cleaning-up $MODID data..."
   cleanup
   ui_print " "
-elif [ -d $DIR ] && ! grep -Eq "$MODNAME" $FILE; then
+elif [ -d $DIR ] && ! grep -q "$MODNAME" $FILE; then
   ui_print "- Different version detected"
   ui_print "  Cleaning-up $MODID data..."
   cleanup
@@ -179,29 +178,28 @@ fi
 
 # function
 permissive_2() {
-sed -i '1i\
-SELINUX=`getenforce`\
-if [ "$SELINUX" == Enforcing ]; then\
-  magiskpolicy --live "permissive *"\
-fi\' $MODPATH/post-fs-data.sh
+sed -i 's|#2||g' $MODPATH/post-fs-data.sh
 }
 permissive() {
-SELINUX=`getenforce`
-if [ "$SELINUX" == Enforcing ]; then
-  setenforce 0
-  SELINUX=`getenforce`
-  if [ "$SELINUX" == Enforcing ]; then
+FILE=/sys/fs/selinux/enforce
+SELINUX=`cat $FILE`
+if [ "$SELINUX" == 1 ]; then
+  if ! setenforce 0; then
+    echo 0 > $FILE
+  fi
+  SELINUX=`cat $FILE`
+  if [ "$SELINUX" == 1 ]; then
     ui_print "  Your device can't be turned to Permissive state."
     ui_print "  Using Magisk Permissive mode instead."
     permissive_2
   else
-    setenforce 1
-    sed -i '1i\
-SELINUX=`getenforce`\
-if [ "$SELINUX" == Enforcing ]; then\
-  setenforce 0\
-fi\' $MODPATH/post-fs-data.sh
+    if ! setenforce 1; then
+      echo 1 > $FILE
+    fi
+    sed -i 's|#1||g' $MODPATH/post-fs-data.sh
   fi
+else
+  sed -i 's|#1||g' $MODPATH/post-fs-data.sh
 fi
 }
 
@@ -242,49 +240,48 @@ fi
 # function
 hide_oat() {
 for APPS in $APP; do
-  mkdir -p `find $MODPATH/system -type d -name $APPS`/oat
-  touch `find $MODPATH/system -type d -name $APPS`/oat/.replace
+  REPLACE="$REPLACE
+  `find $MODPATH/system -type d -name $APPS | sed "s|$MODPATH||"`/oat"
 done
 }
 replace_dir() {
 if [ -d $DIR ]; then
-  mkdir -p $MODDIR
-  touch $MODDIR/.replace
+  REPLACE="$REPLACE $MODDIR"
 fi
 }
 hide_app() {
 DIR=$SYSTEM/app/$APPS
-MODDIR=$MODPATH/system/app/$APPS
+MODDIR=/system/app/$APPS
 replace_dir
 DIR=$SYSTEM/priv-app/$APPS
-MODDIR=$MODPATH/system/priv-app/$APPS
+MODDIR=/system/priv-app/$APPS
 replace_dir
 DIR=$PRODUCT/app/$APPS
-MODDIR=$MODPATH/system/product/app/$APPS
+MODDIR=/system/product/app/$APPS
 replace_dir
 DIR=$PRODUCT/priv-app/$APPS
-MODDIR=$MODPATH/system/product/priv-app/$APPS
+MODDIR=/system/product/priv-app/$APPS
 replace_dir
 DIR=$MY_PRODUCT/app/$APPS
-MODDIR=$MODPATH/system/product/app/$APPS
+MODDIR=/system/product/app/$APPS
 replace_dir
 DIR=$MY_PRODUCT/priv-app/$APPS
-MODDIR=$MODPATH/system/product/priv-app/$APPS
+MODDIR=/system/product/priv-app/$APPS
 replace_dir
 DIR=$PRODUCT/preinstall/$APPS
-MODDIR=$MODPATH/system/product/preinstall/$APPS
+MODDIR=/system/product/preinstall/$APPS
 replace_dir
 DIR=$SYSTEM_EXT/app/$APPS
-MODDIR=$MODPATH/system/system_ext/app/$APPS
+MODDIR=/system/system_ext/app/$APPS
 replace_dir
 DIR=$SYSTEM_EXT/priv-app/$APPS
-MODDIR=$MODPATH/system/system_ext/priv-app/$APPS
+MODDIR=/system/system_ext/priv-app/$APPS
 replace_dir
 DIR=$VENDOR/app/$APPS
-MODDIR=$MODPATH/system/vendor/app/$APPS
+MODDIR=/system/vendor/app/$APPS
 replace_dir
 DIR=$VENDOR/euclid/product/app/$APPS
-MODDIR=$MODPATH/system/vendor/euclid/product/app/$APPS
+MODDIR=/system/vendor/euclid/product/app/$APPS
 replace_dir
 }
 
@@ -299,29 +296,74 @@ done
 # stream mode
 FILE=$MODPATH/.aml.sh
 PROP=`grep_prop stream.mode $OPTIONALS`
-if echo "$PROP" | grep -Eq r; then
+if echo "$PROP" | grep -q r; then
   ui_print "- Activating ring stream..."
-  sed -i 's/#r//g' $FILE
+  sed -i 's|#r||g' $FILE
   ui_print " "
 fi
-if echo "$PROP" | grep -Eq a; then
+if echo "$PROP" | grep -q a; then
   ui_print "- Activating alarm stream..."
-  sed -i 's/#a//g' $FILE
+  sed -i 's|#a||g' $FILE
   ui_print " "
 fi
-if echo "$PROP" | grep -Eq s; then
+if echo "$PROP" | grep -q s; then
   ui_print "- Activating system stream..."
-  sed -i 's/#s//g' $FILE
+  sed -i 's|#s||g' $FILE
   ui_print " "
 fi
-if echo "$PROP" | grep -Eq v; then
+if echo "$PROP" | grep -q v; then
   ui_print "- Activating voice_call stream..."
-  sed -i 's/#v//g' $FILE
+  sed -i 's|#v||g' $FILE
   ui_print " "
 fi
-if echo "$PROP" | grep -Eq n; then
+if echo "$PROP" | grep -q n; then
   ui_print "- Activating notification stream..."
-  sed -i 's/#n//g' $FILE
+  sed -i 's|#n||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q b; then
+  ui_print "- Activating bluetooth_sco stream..."
+  sed -i 's|#b||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q f; then
+  ui_print "- Activating dtmf stream..."
+  sed -i 's|#f||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q e; then
+  ui_print "- Activating enforced_audible stream..."
+  sed -i 's|#e||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q y; then
+  ui_print "- Activating accessibility stream..."
+  sed -i 's|#y||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q t; then
+  ui_print "- Activating tts stream..."
+  sed -i 's|#t||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q i; then
+  ui_print "- Activating assistant stream..."
+  sed -i 's|#i||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q c; then
+  ui_print "- Activating call_assistant stream..."
+  sed -i 's|#c||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q p; then
+  ui_print "- Activating patch stream..."
+  sed -i 's|#p||g' $FILE
+  ui_print " "
+fi
+if echo "$PROP" | grep -q g; then
+  ui_print "- Activating rerouting stream..."
+  sed -i 's|#g||g' $FILE
   ui_print " "
 fi
 
@@ -351,10 +393,18 @@ done
 NAME="libomx-dts.so libstagefright_soft_dtsdec.so"
 file_check_vendor
 
+# directory
+if [ "$API" -le 25 ]; then
+  ui_print "- /vendor/lib/soundfx is not supported in SDK 25 and bellow"
+  ui_print "  Using /system/lib/soundfx instead"
+  mv -f $MODPATH/system/vendor/lib* $MODPATH/system
+  ui_print " "
+fi
+
 # audio rotation
 FILE=$MODPATH/service.sh
 if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
-  ui_print "- Activating ro.audio.monitorRotation=true"
+  ui_print "- Enables ro.audio.monitorRotation=true"
   sed -i '1i\
 resetprop ro.audio.monitorRotation true' $FILE
   ui_print " "
@@ -363,27 +413,11 @@ fi
 # raw
 FILE=$MODPATH/.aml.sh
 if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
-  ui_print "- Not disabling Ultra Low Latency playback (RAW)"
+  ui_print "- Not disables Ultra Low Latency playback (RAW)"
   ui_print " "
 else
   sed -i 's/#u//g' $FILE
 fi
-
-# other
-FILE=$MODPATH/service.sh
-if [ "`grep_prop other.etc $OPTIONALS`" == 1 ]; then
-  ui_print "- Activating other etc files bind mount..."
-  sed -i 's/#p//g' $FILE
-  ui_print " "
-fi
-
-# permission
-ui_print "- Setting permission..."
-DIR=`find $MODPATH/system/vendor -type d`
-for DIRS in $DIR; do
-  chown 0.2000 $DIRS
-done
-ui_print " "
 
 # vendor_overlay
 DIR=/product/vendor_overlay
@@ -393,6 +427,23 @@ if [ "`grep_prop fix.vendor_overlay $OPTIONALS`" == 1 ]\
   cp -rf $DIR/*/* $MODPATH/system/vendor
   ui_print " "
 fi
+
+# run
+. $MODPATH/copy.sh
+. $MODPATH/.aml.sh
+
+# unmount
+if [ "$BOOTMODE" == true ] && [ ! "$MAGISKPATH" ]; then
+  unmount_mirror
+fi
+
+
+
+
+
+
+
+
 
 
 

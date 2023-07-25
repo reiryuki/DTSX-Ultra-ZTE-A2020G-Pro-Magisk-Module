@@ -2,7 +2,7 @@
 
 ## DISCLAIMER
 - DTS app and blobs are owned by DTS™.
-- The MIT license specified here is for the Magisk Module, not for DTS app and blobs.
+- The MIT license specified here is for the Magisk Module only, not for DTS app and blobs.
 
 ## Descriptions
 - Equalizer soundfx ported from ZTE A2020G Pro (P855A01) and integrated as a Magisk Module for all supported and rooted devices with Magisk
@@ -11,20 +11,22 @@
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/zte/p855a01 msmnile-user-9-PKQ1.190328.001-68-release-keys
-- DtsUltra.apk, offline_hptuning.db, & dts-eagle.lic: https://github.com/C457/proprietary_vendor_zte_pine/tree/c22a26a9074dbf3f0bb6fbc43e7203531145d78e
+- offline_hptuning.db & dts-eagle.lic: https://github.com/C457/proprietary_vendor_zte_pine/tree/c22a26a9074dbf3f0bb6fbc43e7203531145d78e
 - libdtsaudio.so: https://github.com/TadiT7/nubia_nx619j_dump/tree/76a9813a81f1973fcbff9dd21d53b6e9040a45f8
 
 ## Screenshots
 - https://t.me/androidryukimodsdiscussions/3240
 
 ## Requirements
-- Android 9 and up
-- Magisk installed
+- Android 6 and up
+- Magisk or KernelSU installed
 
 ## Installation Guide & Download Link
-- Install this module https://www.pling.com/p/1531642/ via Magisk app or Recovery
+- Install this module https://www.pling.com/p/1531642/ via Magisk app or KernelSU app or Recovery if Magisk installed
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
+- If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot after
+- If you are using SUList, you need to allow list manually your home launcher app (enable show system apps) and reboot after
 
 ## Troubleshootings and Optionals
 - https://t.me/androidryukimodsdiscussions/29836
@@ -40,6 +42,7 @@
 - Android 10 CrDroid ROM
 - Android 11 DotOS ROM
 - Android 12 Ancient OS ROM
+- Android 13 CrDroid ROM
 
 ## Credits and contributors
 - https://t.me/viperatmos
