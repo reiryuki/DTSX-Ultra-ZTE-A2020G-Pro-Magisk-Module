@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<permissions>
-    <privapp-permissions package="com.dts.dtsxultra">
-        <permission name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/>
-        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
-        <permission name="android.permission.MANAGE_USERS"/>
-    </privapp-permissions>
-</permissions>
