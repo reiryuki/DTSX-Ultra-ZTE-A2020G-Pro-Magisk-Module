@@ -109,10 +109,10 @@ fi
 
 # cleaning
 ui_print "- Cleaning..."
-PKG=`cat $MODPATH/package.txt`
+PKGS=`cat $MODPATH/package.txt`
 if [ "$BOOTMODE" == true ]; then
-  for PKGS in $PKG; do
-    RES=`pm uninstall $PKGS 2>/dev/null`
+  for PKG in $PKGS; do
+    RES=`pm uninstall $PKG 2>/dev/null`
   done
 fi
 rm -rf $MODPATH/unused
@@ -121,33 +121,31 @@ ui_print " "
 
 # function
 conflict() {
-for NAMES in $NAME; do
-  DIR=/data/adb/modules_update/$NAMES
+for NAME in $NAMES; do
+  DIR=/data/adb/modules_update/$NAME
   if [ -f $DIR/uninstall.sh ]; then
     sh $DIR/uninstall.sh
   fi
   rm -rf $DIR
-  DIR=/data/adb/modules/$NAMES
+  DIR=/data/adb/modules/$NAME
   rm -f $DIR/update
   touch $DIR/remove
-  FILE=/data/adb/modules/$NAMES/uninstall.sh
+  FILE=/data/adb/modules/$NAME/uninstall.sh
   if [ -f $FILE ]; then
     sh $FILE
     rm -f $FILE
   fi
-  rm -rf /metadata/magisk/$NAMES
-  rm -rf /mnt/vendor/persist/magisk/$NAMES
-  rm -rf /persist/magisk/$NAMES
-  rm -rf /data/unencrypted/magisk/$NAMES
-  rm -rf /cache/magisk/$NAMES
-  rm -rf /cust/magisk/$NAMES
+  rm -rf /metadata/magisk/$NAME
+  rm -rf /mnt/vendor/persist/magisk/$NAME
+  rm -rf /persist/magisk/$NAME
+  rm -rf /data/unencrypted/magisk/$NAME
+  rm -rf /cache/magisk/$NAME
+  rm -rf /cust/magisk/$NAME
 done
 }
 
 # conflict
-NAME="DTS_HPX
-      DTSX_Ultra
-      AudioWizard"
+NAMES="DTS_HPX DTSX_Ultra AudioWizard"
 conflict
 
 # function
@@ -165,7 +163,7 @@ fi
 DIR=/data/adb/modules/$MODID
 FILE=$DIR/module.prop
 if [ "`grep_prop data.cleanup $OPTIONALS`" == 1 ]; then
-  sed -i 's/^data.cleanup=1/data.cleanup=0/' $OPTIONALS
+  sed -i 's|^data.cleanup=1|data.cleanup=0|g' $OPTIONALS
   ui_print "- Cleaning-up $MODID data..."
   cleanup
   ui_print " "
@@ -230,8 +228,8 @@ ui_print " "
 # patch
 if [ "`grep_prop dts.patch $OPTIONALS`" == 1 ]; then
   FILE=`find $MODPATH -type f -name libdts-eagle-shared.so\
-        -o -name libdtsdsec.so -o -name libomx-dts.so\
-        -o -name service.sh`
+         -o -name libdtsdsec.so -o -name libomx-dts.so\
+         -o -name service.sh`
   PROP=ro.build.product
   MODPROP=ro.build.dts.mod
   patch_file
@@ -239,9 +237,9 @@ fi
 
 # function
 hide_oat() {
-for APPS in $APP; do
+for APP in $APPS; do
   REPLACE="$REPLACE
-  `find $MODPATH/system -type d -name $APPS | sed "s|$MODPATH||"`/oat"
+  `find $MODPATH/system -type d -name $APP | sed "s|$MODPATH||g"`/oat"
 done
 }
 replace_dir() {
@@ -250,48 +248,48 @@ if [ -d $DIR ]; then
 fi
 }
 hide_app() {
-DIR=$SYSTEM/app/$APPS
-MODDIR=/system/app/$APPS
-replace_dir
-DIR=$SYSTEM/priv-app/$APPS
-MODDIR=/system/priv-app/$APPS
-replace_dir
-DIR=$PRODUCT/app/$APPS
-MODDIR=/system/product/app/$APPS
-replace_dir
-DIR=$PRODUCT/priv-app/$APPS
-MODDIR=/system/product/priv-app/$APPS
-replace_dir
-DIR=$MY_PRODUCT/app/$APPS
-MODDIR=/system/product/app/$APPS
-replace_dir
-DIR=$MY_PRODUCT/priv-app/$APPS
-MODDIR=/system/product/priv-app/$APPS
-replace_dir
-DIR=$PRODUCT/preinstall/$APPS
-MODDIR=/system/product/preinstall/$APPS
-replace_dir
-DIR=$SYSTEM_EXT/app/$APPS
-MODDIR=/system/system_ext/app/$APPS
-replace_dir
-DIR=$SYSTEM_EXT/priv-app/$APPS
-MODDIR=/system/system_ext/priv-app/$APPS
-replace_dir
-DIR=$VENDOR/app/$APPS
-MODDIR=/system/vendor/app/$APPS
-replace_dir
-DIR=$VENDOR/euclid/product/app/$APPS
-MODDIR=/system/vendor/euclid/product/app/$APPS
-replace_dir
+for APP in $APPS; do
+  DIR=$SYSTEM/app/$APP
+  MODDIR=/system/app/$APP
+  replace_dir
+  DIR=$SYSTEM/priv-app/$APP
+  MODDIR=/system/priv-app/$APP
+  replace_dir
+  DIR=$PRODUCT/app/$APP
+  MODDIR=/system/product/app/$APP
+  replace_dir
+  DIR=$PRODUCT/priv-app/$APP
+  MODDIR=/system/product/priv-app/$APP
+  replace_dir
+  DIR=$MY_PRODUCT/app/$APP
+  MODDIR=/system/product/app/$APP
+  replace_dir
+  DIR=$MY_PRODUCT/priv-app/$APP
+  MODDIR=/system/product/priv-app/$APP
+  replace_dir
+  DIR=$PRODUCT/preinstall/$APP
+  MODDIR=/system/product/preinstall/$APP
+  replace_dir
+  DIR=$SYSTEM_EXT/app/$APP
+  MODDIR=/system/system_ext/app/$APP
+  replace_dir
+  DIR=$SYSTEM_EXT/priv-app/$APP
+  MODDIR=/system/system_ext/priv-app/$APP
+  replace_dir
+  DIR=$VENDOR/app/$APP
+  MODDIR=/system/vendor/app/$APP
+  replace_dir
+  DIR=$VENDOR/euclid/product/app/$APP
+  MODDIR=/system/vendor/euclid/product/app/$APP
+  replace_dir
+done
 }
 
 # hide
-APP="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
+APPS="`ls $MODPATH/system/priv-app` `ls $MODPATH/system/app`"
 hide_oat
-APP="MusicFX DTSXULTRA AudioWizard"
-for APPS in $APP; do
-  hide_app
-done
+APPS="MusicFX DTSXULTRA AudioWizard"
+hide_app
 
 # stream mode
 FILE=$MODPATH/.aml.sh
@@ -369,28 +367,28 @@ fi
 
 # function
 file_check_vendor() {
-for NAMES in $NAME; do
+for NAME in $NAMES; do
   if [ "$IS64BIT" == true ]; then
-    FILE=$VENDOR/lib64/$NAMES
-    FILE2=$ODM/lib64/$NAMES
+    FILE=$VENDOR/lib64/$NAME
+    FILE2=$ODM/lib64/$NAME
     if [ -f $FILE ] || [ -f $FILE2 ]; then
-      ui_print "- Detected $NAMES 64"
+      ui_print "- Detected $NAME 64"
       ui_print " "
-      rm -f $MODPATH/system/vendor/lib64/$NAMES
+      rm -f $MODPATH/system/vendor/lib64/$NAME
     fi
   fi
-  FILE=$VENDOR/lib/$NAMES
-  FILE2=$ODM/lib/$NAMES
+  FILE=$VENDOR/lib/$NAME
+  FILE2=$ODM/lib/$NAME
   if [ -f $FILE ] || [ -f $FILE2 ]; then
-    ui_print "- Detected $NAMES"
+    ui_print "- Detected $NAME"
     ui_print " "
-    rm -f $MODPATH/system/vendor/lib/$NAMES
+    rm -f $MODPATH/system/vendor/lib/$NAME
   fi
 done
 }
 
 # check
-NAME="libomx-dts.so libstagefright_soft_dtsdec.so"
+NAMES="libomx-dts.so libstagefright_soft_dtsdec.so"
 file_check_vendor
 
 # directory
