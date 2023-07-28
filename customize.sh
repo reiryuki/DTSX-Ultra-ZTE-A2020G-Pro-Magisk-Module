@@ -30,7 +30,7 @@ fi
 ui_print " "
 
 # sdk
-NUM=28
+NUM=23
 if [ "$API" -lt $NUM ]; then
   ui_print "! Unsupported SDK $API. You have to upgrade your"
   ui_print "  Android version at least SDK API $NUM to use this"
