@@ -9,6 +9,25 @@ if [ "$BOOTMODE" != true ]; then
   ui_print " "
 fi
 
+# optionals
+OPTIONALS=/sdcard/optionals.prop
+if [ ! -f $OPTIONALS ]; then
+  touch $OPTIONALS
+fi
+
+# debug
+if [ "`grep_prop debug.log $OPTIONALS`" == 1 ]; then
+  ui_print "- The install log will contain detailed information"
+  set -x
+  ui_print " "
+fi
+
+# var
+LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
+if [ ! "$LIST32BIT" ]; then
+  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
+fi
+
 # run
 . $MODPATH/function.sh
 
@@ -43,12 +62,21 @@ fi
 
 # bit
 if [ "$IS64BIT" == true ]; then
-  ui_print "- 64 bit"
+  ui_print "- 64 bit architecture"
+  ui_print " "
+  # 32 bit
+  if [ "$LIST32BIT" ]; then
+    ui_print "- 32 bit library support"
+  else
+    ui_print "- Doesn't support 32 bit library"
+    rm -rf $MODPATH/system*/lib $MODPATH/system*/vendor/lib
+  fi
+  ui_print " "
 else
-  ui_print "- 32 bit"
+  ui_print "- 32 bit architecture"
   rm -rf `find $MODPATH -type d -name *64*`
+  ui_print " "
 fi
-ui_print " "
 
 # recovery
 mount_partitions_in_recovery
@@ -58,10 +86,16 @@ magisk_setup
 
 # path
 SYSTEM=`realpath $MIRROR/system`
-PRODUCT=`realpath $MIRROR/product`
-VENDOR=`realpath $MIRROR/vendor`
-SYSTEM_EXT=`realpath $MIRROR/system_ext`
 if [ "$BOOTMODE" == true ]; then
+  if [ ! -d $MIRROR/vendor ]; then
+    mount_vendor_to_mirror
+  fi
+  if [ ! -d $MIRROR/product ]; then
+    mount_product_to_mirror
+  fi
+  if [ ! -d $MIRROR/system_ext ]; then
+    mount_system_ext_to_mirror
+  fi
   if [ ! -d $MIRROR/odm ]; then
     mount_odm_to_mirror
   fi
@@ -69,14 +103,11 @@ if [ "$BOOTMODE" == true ]; then
     mount_my_product_to_mirror
   fi
 fi
+VENDOR=`realpath $MIRROR/vendor`
+PRODUCT=`realpath $MIRROR/product`
+SYSTEM_EXT=`realpath $MIRROR/system_ext`
 ODM=`realpath $MIRROR/odm`
 MY_PRODUCT=`realpath $MIRROR/my_product`
-
-# optionals
-OPTIONALS=/sdcard/optionals.prop
-if [ ! -f $OPTIONALS ]; then
-  touch $OPTIONALS
-fi
 
 # sepolicy
 FILE=$MODPATH/sepolicy.rule
@@ -162,12 +193,14 @@ fi
 # cleanup
 DIR=/data/adb/modules/$MODID
 FILE=$DIR/module.prop
+PREVMODNAME=`grep_prop name $FILE`
 if [ "`grep_prop data.cleanup $OPTIONALS`" == 1 ]; then
   sed -i 's|^data.cleanup=1|data.cleanup=0|g' $OPTIONALS
   ui_print "- Cleaning-up $MODID data..."
   cleanup
   ui_print " "
-elif [ -d $DIR ] && ! grep -q "$MODNAME" $FILE; then
+elif [ -d $DIR ]\
+&& [ "$PREVMODNAME" != "$MODNAME" ]; then
   ui_print "- Different version detected"
   ui_print "  Cleaning-up $MODID data..."
   cleanup
@@ -367,35 +400,35 @@ fi
 
 # function
 file_check_vendor() {
-for NAME in $NAMES; do
-  if [ "$IS64BIT" == true ]; then
-    FILE=$VENDOR/lib64/$NAME
-    FILE2=$ODM/lib64/$NAME
-    if [ -f $FILE ] || [ -f $FILE2 ]; then
-      ui_print "- Detected $NAME 64"
-      ui_print " "
-      rm -f $MODPATH/system/vendor/lib64/$NAME
-    fi
-  fi
-  FILE=$VENDOR/lib/$NAME
-  FILE2=$ODM/lib/$NAME
-  if [ -f $FILE ] || [ -f $FILE2 ]; then
-    ui_print "- Detected $NAME"
+for FILE in $FILES; do
+  DES=$VENDOR$FILE
+  DES2=$ODM$FILE
+  if [ -f $DES ] || [ -f $DES2 ]; then
+    ui_print "- Detected $FILE"
     ui_print " "
-    rm -f $MODPATH/system/vendor/lib/$NAME
+    rm -f $MODPATH/system/vendor$FILE
   fi
 done
 }
 
 # check
-NAMES="libomx-dts.so libstagefright_soft_dtsdec.so"
-file_check_vendor
+if "$IS64BIT"; then
+  FILES="/lib64/libomx-dts.so
+         /lib64/libstagefright_soft_dtsdec.so"
+  file_check_vendor
+fi
+if [ "$LIST32BIT" ]; then
+  FILES="/lib/libomx-dts.so
+         /lib/libstagefright_soft_dtsdec.so"
+  file_check_vendor
+fi
 
 # directory
 if [ "$API" -le 25 ]; then
-  ui_print "- /vendor/lib/soundfx is not supported in SDK 25 and bellow"
-  ui_print "  Using /system/lib/soundfx instead"
-  mv -f $MODPATH/system/vendor/lib* $MODPATH/system
+  ui_print "- /vendor/lib*/soundfx is not supported in SDK 25 and bellow"
+  ui_print "  Using /system/lib*/soundfx instead"
+  cp -rf $MODPATH/system/vendor/lib* $MODPATH/system
+  rm -rf $MODPATH/system/vendor/lib*
   ui_print " "
 fi
 
@@ -414,7 +447,7 @@ if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
   ui_print "- Not disables Ultra Low Latency playback (RAW)"
   ui_print " "
 else
-  sed -i 's/#u//g' $FILE
+  sed -i 's|#u||g' $FILE
 fi
 
 # vendor_overlay

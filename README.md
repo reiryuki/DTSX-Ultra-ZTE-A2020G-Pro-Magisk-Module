@@ -29,10 +29,10 @@
 - If you are using SUList, you need to allow list manually your home launcher app (enable show system apps) and reboot after
 
 ## Troubleshootings and Optionals
-- https://t.me/androidryukimodsdiscussions/29836
-- https://t.me/androidryukimodsdiscussions/60861
-- https://t.me/androidryukimodsdiscussions/26764
 - https://t.me/androidryukimodsdiscussions/3107
+- Global: https://t.me/androidryukimodsdiscussions/29836
+- Global: https://t.me/androidryukimodsdiscussions/60861
+- Stream: https://t.me/androidryukimodsdiscussions/26764
 
 ## Support & Bug Report
 - https://t.me/androidryukimodsdiscussions/2618
@@ -44,13 +44,16 @@
 - Android 12 Ancient OS ROM
 - Android 13 CrDroid ROM
 
+## Known Issue
+- Bug microphone in some game apps
+
 ## Credits and contributors
 - https://t.me/viperatmos
 - https://t.me/androidryukimodsdiscussions
 - You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
 
 ## Thanks for Donations
-- This Magisk Module is always will be free but you can however show us that you are care by making a donations:
+This Magisk Module is always will be free but you can however show us that you are care by making a donations:
 - https://ko-fi.com/reiryuki
 - https://www.paypal.me/reiryuki
 - https://t.me/androidryukimodsdiscussions/2619

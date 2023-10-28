@@ -1,121 +1,69 @@
 # debug
-dontaudit system_server system_file file write
-allow     system_server system_file file write
+allow system_server system_file file write
 
 # context
 create { system_lib_file vendor_file vendor_configs_file }
-dontaudit { system_file system_lib_file vendor_file vendor_configs_file } labeledfs filesystem associate
-allow     { system_file system_lib_file vendor_file vendor_configs_file } labeledfs filesystem associate
-dontaudit init { system_file system_lib_file vendor_file vendor_configs_file } { dir file } relabelfrom
-allow     init { system_file system_lib_file vendor_file vendor_configs_file } { dir file } relabelfrom
+allow { system_file system_lib_file vendor_file vendor_configs_file } labeledfs filesystem associate
+allow init { system_file system_lib_file vendor_file vendor_configs_file } { dir file } relabelfrom
 
 # sock_file
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } property_socket sock_file { open read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } property_socket sock_file { open read write }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { property_socket logd_socket } sock_file write
-allow     { hal_audio_default mtk_hal_audio audioserver } { property_socket logd_socket } sock_file write
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } property_socket sock_file { open read write }
+allow { hal_audio_default mtk_hal_audio audioserver } { property_socket logd_socket } sock_file write
 
 # unix_stream_socket
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
-dontaudit init pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { create bind }
-allow     init pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { create bind }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { init logd } unix_stream_socket connectto
-allow     { hal_audio_default mtk_hal_audio audioserver } { init logd } unix_stream_socket connectto
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
+allow init pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { create bind }
+allow { hal_audio_default mtk_hal_audio audioserver } { init logd } unix_stream_socket connectto
 
 # dir
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file vendor_data_file shell_data_file preloads_media_file } dir { ioctl read getattr lock open }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file vendor_data_file shell_data_file preloads_media_file } dir { ioctl read getattr lock open }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } media_rw_data_file dir *
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } media_rw_data_file dir *
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * dir search
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * dir search
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file dir { read getattr open }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file dir { read getattr open }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device dir { read open }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device dir { read open }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file dir { read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file dir { read write }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir open
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir open
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app_data_file unlabeled } dir getattr
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app_data_file unlabeled } dir getattr
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } apk_data_file dir write
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } apk_data_file dir write
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir read
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir read
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir { write add_name remove_name }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir { write add_name remove_name }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { open search }
-allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { open search }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } unlabeled dir { search write add_name }
-allow     { hal_audio_default mtk_hal_audio audioserver } unlabeled dir { search write add_name }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_data_file dir *
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_data_file dir *
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file vendor_data_file shell_data_file preloads_media_file } dir { ioctl read getattr lock open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } media_rw_data_file dir *
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * dir search
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file dir { read getattr open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device dir { read open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file dir { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir open
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app_data_file unlabeled } dir getattr
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } apk_data_file dir write
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir read
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir { write add_name remove_name }
+allow { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { open search }
+allow { hal_audio_default mtk_hal_audio audioserver } unlabeled dir { search write add_name }
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_data_file dir *
 
 # file
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file file { read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file file { read write }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file shell_data_file sysfs_hwrandom preloads_media_file } file { ioctl read lock }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file shell_data_file sysfs_hwrandom preloads_media_file } file { ioctl read lock }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * file { open getattr }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * file { open getattr }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } app_data_file file { read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } app_data_file file { read write }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file file { read execute }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file file { read execute }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file file { lock create }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file file { lock create }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { media_rw_data_file unlabeled proc_modules proc_interrupts } file *
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { media_rw_data_file unlabeled proc_modules proc_interrupts } file *
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bg_boot_complete_prop bg_daemon_prop bluetooth_prop } file { read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bg_boot_complete_prop bg_daemon_prop bluetooth_prop } file { read write }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bootloader_boot_reason_prop proc_pagetypeinfo vendor_radio_prop vendor_display_prop customize_prop } file read
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bootloader_boot_reason_prop proc_pagetypeinfo vendor_radio_prop vendor_display_prop customize_prop } file read
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bluetooth_prop vendor_radio_prop bootloader_boot_reason_prop vendor_display_prop adbd_prop apexd_prop } file map
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bluetooth_prop vendor_radio_prop bootloader_boot_reason_prop vendor_display_prop adbd_prop apexd_prop } file map
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file file { create write lock }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file file { create write lock }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_data_file vendor_configs_file } file { ioctl read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_data_file vendor_configs_file } file { ioctl read write }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } system_file file { read open getattr execute ioctl lock }
-allow     { hal_audio_default mtk_hal_audio audioserver } system_file file { read open getattr execute ioctl lock }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } app_data_file file { ioctl read write open getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } app_data_file file { ioctl read write open getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } unlabeled file { read write create open getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } unlabeled file { read write create open getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_data_file file { create unlink setattr open getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_data_file file { create unlink setattr open getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_configs_file file { open getattr lock }
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_configs_file file { open getattr lock }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_file file { open read write ioctl lock }
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_file file { open read write ioctl lock }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { sysfs sysfs_net system_data_file } file { read open getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } { sysfs sysfs_net system_data_file } file { read open getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { adb_data_file system_prop } file read
-allow     { hal_audio_default mtk_hal_audio audioserver } { adb_data_file system_prop } file read
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { serialno_prop oem_prop } file { read getattr open }
-allow     { hal_audio_default mtk_hal_audio audioserver } { serialno_prop oem_prop } file { read getattr open }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } system_data_file file write
-allow     { hal_audio_default mtk_hal_audio audioserver } system_data_file file write
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { credmgrd_exec suntrold_exec } file getattr
-allow     { hal_audio_default mtk_hal_audio audioserver } { credmgrd_exec suntrold_exec } file getattr
-dontaudit init { proc sysfs_devices_system_cpu } file write
-allow     init { proc sysfs_devices_system_cpu } file write
-dontaudit zygote device file { write open }
-allow     zygote device file { write open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file file { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file shell_data_file sysfs_hwrandom preloads_media_file } file { ioctl read lock }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * file { open getattr }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } app_data_file file { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file file { read execute }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file file { lock create }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { media_rw_data_file unlabeled proc_modules proc_interrupts } file *
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bg_boot_complete_prop bg_daemon_prop bluetooth_prop } file { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bootloader_boot_reason_prop proc_pagetypeinfo vendor_radio_prop vendor_display_prop customize_prop } file read
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bluetooth_prop vendor_radio_prop bootloader_boot_reason_prop vendor_display_prop adbd_prop apexd_prop } file map
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file file { create write lock }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_data_file vendor_configs_file } file { ioctl read write }
+allow { hal_audio_default mtk_hal_audio audioserver } system_file file { read open getattr execute ioctl lock }
+allow { hal_audio_default mtk_hal_audio audioserver } app_data_file file { ioctl read write open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } unlabeled file { read write create open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_data_file file { create unlink setattr open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_configs_file file { open getattr lock }
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_file file { open read write ioctl lock }
+allow { hal_audio_default mtk_hal_audio audioserver } { sysfs sysfs_net system_data_file } file { read open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } { adb_data_file system_prop } file read
+allow { hal_audio_default mtk_hal_audio audioserver } { serialno_prop oem_prop } file { read getattr open }
+allow { hal_audio_default mtk_hal_audio audioserver } system_data_file file write
+allow { hal_audio_default mtk_hal_audio audioserver } { credmgrd_exec suntrold_exec } file getattr
+allow init { proc sysfs_devices_system_cpu } file write
+allow zygote device file { write open }
 
 # lnk_file
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file lnk_file { read getattr open }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file lnk_file { read getattr open }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file lnk_file { ioctl read getattr lock open }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file lnk_file { ioctl read getattr lock open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file lnk_file { read getattr open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file lnk_file { ioctl read getattr lock open }
 
 # service_manager
 allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } servicemanager service_manager list
@@ -125,85 +73,61 @@ allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untru
 allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } default_android_hwservice hwservice_manager find
 
 # process
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } process ptrace
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } process ptrace
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } process ptrace
 
 # binder
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } hal_memtrack_default binder call
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } hal_memtrack_default binder call
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } su binder call
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } su binder call
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } hal_memtrack_default binder call
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } su binder call
 
 # udp_socket
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } udp_socket { create connect }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } udp_socket { create connect }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } udp_socket { create connect }
 
 # tcp_socket
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } tcp_socket { read write create getattr connect getopt setopt }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } tcp_socket { read write create getattr connect getopt setopt }
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } port tcp_socket name_connect
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } port tcp_socket name_connect
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } tcp_socket { read write create getattr connect getopt setopt }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } port tcp_socket name_connect
 
 # chr_file
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { ioctl read write }
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { ioctl read write }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } device chr_file *
-allow     { hal_audio_default mtk_hal_audio audioserver } device chr_file *
-dontaudit init oem_device chr_file { read open }
-allow     init oem_device chr_file { read open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { ioctl read write }
+allow { hal_audio_default mtk_hal_audio audioserver } device chr_file *
+allow init oem_device chr_file { read open }
 
 # property_service
 allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_prop ffs_prop } property_service set
 allow { hal_audio_default mtk_hal_audio audioserver qti_init_shell } default_prop property_service set
 
 # capability
-dontaudit zygote zygote capability kill
-allow     zygote zygote capability kill
+allow zygote zygote capability kill
 
 # capability2
-dontaudit init init capability2 block_suspend
-allow     init init capability2 block_suspend
+allow init init capability2 block_suspend
 
 # socket
-dontaudit init init socket { read write }
-allow     init init socket { read write }
+allow init init socket { read write }
 
 # filesystem
-dontaudit { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } firmware_file filesystem getattr
-allow     { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } firmware_file filesystem getattr
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } firmware_file filesystem getattr
 
 # additional
 allow { hal_audio_default mtk_hal_audio audioserver } system_suspend_hwservice hwservice_manager find
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { default_prop boottime_prop audio_prop } file { read open getattr map }
-allow     { hal_audio_default mtk_hal_audio audioserver } { default_prop boottime_prop audio_prop } file { read open getattr map }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { mnt_vendor_file system_prop } file { read open getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } { mnt_vendor_file system_prop } file { read open getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } radio_prop file { read open getattr map }
-allow     { hal_audio_default mtk_hal_audio audioserver } radio_prop file { read open getattr map }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
-allow     { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file { read open getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file { read open getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } system_prop file map
-allow     { hal_audio_default mtk_hal_audio audioserver } system_prop file map
-dontaudit { hal_audio_default mtk_hal_audio audioserver } vendor_pd_locater_dbg_prop file read
-allow     { hal_audio_default mtk_hal_audio audioserver } vendor_pd_locater_dbg_prop file read
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir read
-allow     { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir read
-dontaudit { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
-allow     { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
-allow     { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
-dontaudit { hal_audio_default mtk_hal_audio audioserver } system_suspend binder call
-allow     { hal_audio_default mtk_hal_audio audioserver } system_suspend binder call
-dontaudit { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
-allow     { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
-dontaudit hal_audio_default hal_audio_default capability2 block_suspend
-allow     hal_audio_default hal_audio_default capability2 block_suspend
-dontaudit mtk_hal_audio mtk_hal_audio capability2 block_suspend
-allow     mtk_hal_audio mtk_hal_audio capability2 block_suspend
-dontaudit audioserver audioserver capability2 block_suspend
-allow     audioserver audioserver capability2 block_suspend
+allow { hal_audio_default mtk_hal_audio audioserver } { default_prop boottime_prop audio_prop } file { read open getattr map }
+allow { hal_audio_default mtk_hal_audio audioserver } { mnt_vendor_file system_prop } file { read open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } radio_prop file { read open getattr map }
+allow { hal_audio_default mtk_hal_audio audioserver } sysfs_wake_lock file { write open }
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_default_prop file { read open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } system_prop file map
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_pd_locater_dbg_prop file read
+allow { hal_audio_default mtk_hal_audio audioserver } sysfs_boot_mode file { read open }
+allow { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir read
+allow { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
+allow { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } system_suspend binder call
+allow { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
+allow hal_audio_default hal_audio_default capability2 block_suspend
+allow mtk_hal_audio mtk_hal_audio capability2 block_suspend
+allow audioserver audioserver capability2 block_suspend
+allow hal_audio_default hal_audio_default capability { sys_nice dac_override sys_admin dac_read_search }
+allow mtk_hal_audio mtk_hal_audio capability { sys_nice dac_override sys_admin dac_read_search }
+allow audioserver audioserver capability { sys_nice dac_override sys_admin dac_read_search }
 
 
 

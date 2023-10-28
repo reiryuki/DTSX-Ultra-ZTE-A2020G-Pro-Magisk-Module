@@ -72,18 +72,9 @@ rm -f $FILE
 
 # directory
 DIR=/data/vendor/audio/dts
-if [ ! -d $DIR ]; then
-  mkdir -p $DIR
-fi
+mkdir -p $DIR
 chmod 0771 $DIR
 chown 1013.1005 $DIR
-
-# cleaning
-FILE=$MODPATH/cleaner.sh
-if [ -f $FILE ]; then
-  . $FILE
-  rm -f $FILE
-fi
 
 # permission
 DIRS=`find $MODPATH/vendor\
@@ -131,7 +122,12 @@ if ! grep delta /data/adb/magisk/util_functions.sh; then
   mount_helper
 fi
 
-
+# cleaning
+FILE=$MODPATH/cleaner.sh
+if [ -f $FILE ]; then
+  . $FILE
+  mv -f $FILE $FILE\.txt
+fi
 
 
 
