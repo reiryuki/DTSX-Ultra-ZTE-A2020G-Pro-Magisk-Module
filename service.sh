@@ -9,28 +9,28 @@ set -x
 API=`getprop ro.build.version.sdk`
 
 # property
-resetprop ro.audio.ignore_effects false
-resetprop ro.build.product P855A01
-resetprop ro.product.model "ZTE A2020G Pro"
-resetprop ro.dts.licensepath /vendor/etc/dts/
-resetprop ro.dts.cfgpath /vendor/etc/dts/
-resetprop ro.vendor.dts.licensepath /vendor/etc/dts/
-resetprop ro.vendor.dts.cfgpath /vendor/etc/dts/
-resetprop ro.feature.zte_feature_dts_ultra_enable true
-resetprop ro.feature.zte_dts_tuning_path P855A02_P
-resetprop ro.product.lge.globaleffect.dts false
-resetprop ro.lge.globaleffect.dts false
-resetprop ro.odm.config.dts_licensepath /vendor/etc/dts/
-resetprop vendor.dts.audio.allow_offload true
-#resetprop vendor.dts.audio.log_time true
-#resetprop vendor.dts.audio.dump_input true
-#resetprop vendor.dts.audio.disable_undoredo true
-#resetprop vendor.dts.audio.print_eagle true
-#resetprop vendor.dts.audio.dump_output true
-#resetprop vendor.dts.audio.dump_eagle true
-#resetprop vendor.dts.audio.dump_initial true
-#resetprop vendor.dts.audio.set_bypass true
-#resetprop vendor.dts.audio.dump_driver true
+resetprop -n ro.audio.ignore_effects false
+resetprop -n ro.build.product P855A01
+resetprop -n ro.product.model "ZTE A2020G Pro"
+resetprop -n ro.dts.licensepath /vendor/etc/dts/
+resetprop -n ro.dts.cfgpath /vendor/etc/dts/
+resetprop -n ro.vendor.dts.licensepath /vendor/etc/dts/
+resetprop -n ro.vendor.dts.cfgpath /vendor/etc/dts/
+resetprop -n ro.feature.zte_feature_dts_ultra_enable true
+resetprop -n ro.feature.zte_dts_tuning_path P855A02_P
+resetprop -n ro.product.lge.globaleffect.dts false
+resetprop -n ro.lge.globaleffect.dts false
+resetprop -n ro.odm.config.dts_licensepath /vendor/etc/dts/
+resetprop -n vendor.dts.audio.allow_offload true
+#resetprop -n vendor.dts.audio.log_time false
+#resetprop -n vendor.dts.audio.dump_input false
+#resetprop -n vendor.dts.audio.disable_undoredo false
+#resetprop -n vendor.dts.audio.print_eagle false
+#resetprop -n vendor.dts.audio.dump_output false
+#resetprop -n vendor.dts.audio.dump_eagle false
+#resetprop -n vendor.dts.audio.dump_initial false
+#resetprop -n vendor.dts.audio.set_bypass false
+#resetprop -n vendor.dts.audio.dump_driver false
 
 # restart
 if [ "$API" -ge 24 ]; then
@@ -38,10 +38,8 @@ if [ "$API" -ge 24 ]; then
 else
   SERVER=mediaserver
 fi
-PID=`pidof $SERVER`
-if [ "$PID" ]; then
-  killall $SERVER android.hardware.audio@4.0-service-mediatek
-fi
+killall $SERVER\
+ android.hardware.audio@4.0-service-mediatek
 
 # wait
 sleep 20
@@ -104,15 +102,18 @@ if [ "$API" -ge 30 ]; then
   appops set $PKG AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 fi
 PKGOPS=`appops get $PKG`
-UID=`dumpsys package $PKG 2>/dev/null | grep -m 1 userId= | sed 's|    userId=||g'`
-if [ "$UID" -gt 9999 ]; then
+UID=`dumpsys package $PKG 2>/dev/null | grep -m 1 Id= | sed -e 's|    userId=||g' -e 's|    appId=||g'`
+if [ "$UID" ] && [ "$UID" -gt 9999 ]; then
   UIDOPS=`appops get --uid "$UID"`
 fi
+
+# audio flinger
+DMAF=`dumpsys media.audio_flinger`
 
 # function
 stop_log() {
 SIZE=`du $LOGFILE | sed "s|$LOGFILE||g"`
-if [ "$LOG" != stopped ] && [ "$SIZE" -gt 50 ]; then
+if [ "$LOG" != stopped ] && [ "$SIZE" -gt 75 ]; then
   exec 2>/dev/null
   set +x
   LOG=stopped

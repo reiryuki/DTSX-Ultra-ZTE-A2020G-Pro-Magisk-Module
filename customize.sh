@@ -1,16 +1,23 @@
 # space
 ui_print " "
 
+# var
+UID=`id -u`
+LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
+if [ ! "$LIST32BIT" ]; then
+  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
+fi
+
 # log
 if [ "$BOOTMODE" != true ]; then
-  FILE=/sdcard/$MODID\_recovery.log
+  FILE=/data/media/"$UID"/$MODID\_recovery.log
   ui_print "- Log will be saved at $FILE"
   exec 2>$FILE
   ui_print " "
 fi
 
 # optionals
-OPTIONALS=/sdcard/optionals.prop
+OPTIONALS=/data/media/"$UID"/optionals.prop
 if [ ! -f $OPTIONALS ]; then
   touch $OPTIONALS
 fi
@@ -20,12 +27,6 @@ if [ "`grep_prop debug.log $OPTIONALS`" == 1 ]; then
   ui_print "- The install log will contain detailed information"
   set -x
   ui_print " "
-fi
-
-# var
-LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
-if [ ! "$LIST32BIT" ]; then
-  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
 fi
 
 # run
@@ -69,7 +70,8 @@ if [ "$IS64BIT" == true ]; then
     ui_print "- 32 bit library support"
   else
     ui_print "- Doesn't support 32 bit library"
-    rm -rf $MODPATH/system*/lib $MODPATH/system*/vendor/lib
+    rm -rf $MODPATH/armeabi-v7a $MODPATH/x86\
+     $MODPATH/system*/lib $MODPATH/system*/vendor/lib
   fi
   ui_print " "
 else
@@ -86,23 +88,6 @@ magisk_setup
 
 # path
 SYSTEM=`realpath $MIRROR/system`
-if [ "$BOOTMODE" == true ]; then
-  if [ ! -d $MIRROR/vendor ]; then
-    mount_vendor_to_mirror
-  fi
-  if [ ! -d $MIRROR/product ]; then
-    mount_product_to_mirror
-  fi
-  if [ ! -d $MIRROR/system_ext ]; then
-    mount_system_ext_to_mirror
-  fi
-  if [ ! -d $MIRROR/odm ]; then
-    mount_odm_to_mirror
-  fi
-  if [ ! -d $MIRROR/my_product ]; then
-    mount_my_product_to_mirror
-  fi
-fi
 VENDOR=`realpath $MIRROR/vendor`
 PRODUCT=`realpath $MIRROR/product`
 SYSTEM_EXT=`realpath $MIRROR/system_ext`
@@ -123,7 +108,7 @@ mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 # mod ui
 if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then
   APP=DtsUltra
-  FILE=/sdcard/$APP.apk
+  FILE=/data/media/"$UID"/$APP.apk
   DIR=`find $MODPATH/system -type d -name $APP`
   ui_print "- Using modified UI apk..."
   if [ -f $FILE ]; then
@@ -437,7 +422,8 @@ FILE=$MODPATH/service.sh
 if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
   ui_print "- Enables ro.audio.monitorRotation=true"
   sed -i '1i\
-resetprop ro.audio.monitorRotation true' $FILE
+resetprop -n ro.audio.monitorRotation true\
+resetprop -n ro.audio.monitorWindowRotation true' $FILE
   ui_print " "
 fi
 
@@ -464,9 +450,7 @@ fi
 . $MODPATH/.aml.sh
 
 # unmount
-if [ "$BOOTMODE" == true ] && [ ! "$MAGISKPATH" ]; then
-  unmount_mirror
-fi
+unmount_mirror
 
 
 

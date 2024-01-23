@@ -7,7 +7,7 @@
 ## Descriptions
 - Equalizer soundfx ported from ZTE A2020G Pro (P855A01) and integrated as a Magisk Module for all supported and rooted devices with Magisk
 - Post process type soundfx
-- Changes ro.build.product and ro.product.model system property, may breaks your platform apps and features functionality
+- Changes/spoofs ro.build.product to P855A01 and ro.product.model to ZTE A2020G Pro which may break some system apps and features functionality
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/zte/p855a01 msmnile-user-9-PKQ1.190328.001-68-release-keys
@@ -43,6 +43,7 @@
 - Android 11 DotOS ROM
 - Android 12 Ancient OS ROM
 - Android 13 CrDroid ROM
+- Android 14 LineageOS ROM
 
 ## Known Issue
 - Bug microphone in some game apps
