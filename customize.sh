@@ -29,6 +29,13 @@ if [ "`grep_prop debug.log $OPTIONALS`" == 1 ]; then
   ui_print " "
 fi
 
+# recovery
+if [ "$BOOTMODE" != true ]; then
+  MODPATH_UPDATE=`echo $MODPATH | sed 's|modules/|modules_update/|g'`
+  rm -f $MODPATH/update
+  rm -rf $MODPATH_UPDATE
+fi
+
 # run
 . $MODPATH/function.sh
 
@@ -53,8 +60,7 @@ ui_print " "
 NUM=23
 if [ "$API" -lt $NUM ]; then
   ui_print "! Unsupported SDK $API. You have to upgrade your"
-  ui_print "  Android version at least SDK API $NUM to use this"
-  ui_print "  module."
+  ui_print "  Android version at least SDK $NUM to use this module."
   abort
 else
   ui_print "- SDK $API"
@@ -128,7 +134,10 @@ ui_print "- Cleaning..."
 PKGS=`cat $MODPATH/package.txt`
 if [ "$BOOTMODE" == true ]; then
   for PKG in $PKGS; do
-    RES=`pm uninstall $PKG 2>/dev/null`
+    FILE=`find /data/app -name *$PKG*`
+    if [ "$FILE" ]; then
+      RES=`pm uninstall $PKG 2>/dev/null`
+    fi
   done
 fi
 rm -rf $MODPATH/unused
@@ -151,12 +160,12 @@ for NAME in $NAMES; do
     sh $FILE
     rm -f $FILE
   fi
-  rm -rf /metadata/magisk/$NAME
-  rm -rf /mnt/vendor/persist/magisk/$NAME
-  rm -rf /persist/magisk/$NAME
-  rm -rf /data/unencrypted/magisk/$NAME
-  rm -rf /cache/magisk/$NAME
-  rm -rf /cust/magisk/$NAME
+  rm -rf /metadata/magisk/$NAME\
+   /mnt/vendor/persist/magisk/$NAME\
+   /persist/magisk/$NAME\
+   /data/unencrypted/magisk/$NAME\
+   /cache/magisk/$NAME\
+   /cust/magisk/$NAME
 done
 }
 
@@ -372,14 +381,10 @@ if echo "$PROP" | grep -q c; then
   sed -i 's|#c||g' $FILE
   ui_print " "
 fi
-if echo "$PROP" | grep -q p; then
-  ui_print "- Activating patch stream..."
-  sed -i 's|#p||g' $FILE
-  ui_print " "
-fi
-if echo "$PROP" | grep -q g; then
-  ui_print "- Activating rerouting stream..."
-  sed -i 's|#g||g' $FILE
+if [ "`grep_prop dts.game $OPTIONALS`" != 0 ]; then
+  sed -i 's|#x||g' $FILE
+else
+  ui_print "- Does not use DTS Game rerouting & patch stream"
   ui_print " "
 fi
 
@@ -397,7 +402,9 @@ done
 }
 
 # check
-if "$IS64BIT"; then
+FILES=/etc/media_codecs_dts_audio.xml
+file_check_vendor
+if [ "$IS64BIT" == true ]; then
   FILES="/lib64/libomx-dts.so
          /lib64/libstagefright_soft_dtsdec.so"
   file_check_vendor
@@ -430,7 +437,7 @@ fi
 # raw
 FILE=$MODPATH/.aml.sh
 if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
-  ui_print "- Not disables Ultra Low Latency playback (RAW)"
+  ui_print "- Does not disable Ultra Low Latency playback (RAW)"
   ui_print " "
 else
   sed -i 's|#u||g' $FILE

@@ -7,46 +7,46 @@ allow { system_file system_lib_file vendor_file vendor_configs_file } labeledfs 
 allow init { system_file system_lib_file vendor_file vendor_configs_file } { dir file } relabelfrom
 
 # sock_file
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } property_socket sock_file { open read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { fwmarkd_socket dnsproxyd_socket } sock_file write
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } property_socket sock_file { open read write }
 allow { hal_audio_default mtk_hal_audio audioserver } { property_socket logd_socket } sock_file write
 
 # unix_stream_socket
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { init netd } unix_stream_socket connectto
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } zygote unix_stream_socket getopt
 allow init pdx_bufferhub_client_endpoint_socket_type unix_stream_socket { create bind }
 allow { hal_audio_default mtk_hal_audio audioserver } { init logd } unix_stream_socket connectto
 
 # dir
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file vendor_data_file shell_data_file preloads_media_file } dir { ioctl read getattr lock open }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } media_rw_data_file dir *
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } * dir search
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file dir { read getattr open }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } device dir { read open }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file dir { read write }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir open
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { system_app_data_file unlabeled } dir getattr
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } apk_data_file dir write
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir read
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir { write add_name remove_name }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file vendor_data_file shell_data_file preloads_media_file } dir { ioctl read getattr lock open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } media_rw_data_file dir *
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * dir search
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file dir { read getattr open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device dir { read open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file dir { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir open
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app_data_file unlabeled } dir getattr
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } apk_data_file dir write
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file dir read
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file dir { write add_name remove_name }
 allow { hal_audio_default mtk_hal_audio audioserver } sysfs_net dir { open search }
 allow { hal_audio_default mtk_hal_audio audioserver } unlabeled dir { search write add_name }
 allow { hal_audio_default mtk_hal_audio audioserver } vendor_data_file dir *
 
 # file
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file file { read write }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file shell_data_file sysfs_hwrandom preloads_media_file } file { ioctl read lock }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } * file { open getattr }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } app_data_file file { read write }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file file { read execute }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file file { lock create }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { media_rw_data_file unlabeled proc_modules proc_interrupts } file *
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { bg_boot_complete_prop bg_daemon_prop bluetooth_prop } file { read write }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { bootloader_boot_reason_prop proc_pagetypeinfo vendor_radio_prop vendor_display_prop customize_prop } file read
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { bluetooth_prop vendor_radio_prop bootloader_boot_reason_prop vendor_display_prop adbd_prop apexd_prop } file map
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } system_file file { create write lock }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_data_file vendor_configs_file } file { ioctl read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_data_file file { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { asec_apk_file shell_data_file sysfs_hwrandom preloads_media_file } file { ioctl read lock }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * file { open getattr }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } app_data_file file { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file file { read execute }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file file { lock create }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { media_rw_data_file unlabeled proc_modules proc_interrupts } file *
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bg_boot_complete_prop bg_daemon_prop bluetooth_prop } file { read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bootloader_boot_reason_prop proc_pagetypeinfo vendor_radio_prop vendor_display_prop customize_prop } file read
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_displayfeature_prop file read
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { bluetooth_prop vendor_radio_prop bootloader_boot_reason_prop vendor_display_prop adbd_prop apexd_prop } file map
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } system_file file { create write lock }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { vendor_data_file vendor_configs_file } file { ioctl read write }
 allow { hal_audio_default mtk_hal_audio audioserver } system_file file { read open getattr execute ioctl lock }
 allow { hal_audio_default mtk_hal_audio audioserver } app_data_file file { ioctl read write open getattr }
 allow { hal_audio_default mtk_hal_audio audioserver } unlabeled file { read write create open getattr }
@@ -63,37 +63,37 @@ allow zygote device file { write open }
 allow zygote properties_serial file write
 
 # lnk_file
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file lnk_file { read getattr open }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file lnk_file { ioctl read getattr lock open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_app_file lnk_file { read getattr open }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } vendor_data_file lnk_file { ioctl read getattr lock open }
 
 # service_manager
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } servicemanager service_manager list
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } * service_manager find
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } servicemanager service_manager list
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } * service_manager find
 
 # hwservice_manager
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } default_android_hwservice hwservice_manager find
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } default_android_hwservice hwservice_manager find
 
 # process
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } process ptrace
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } process ptrace
 
 # binder
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } hal_memtrack_default binder call
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } su binder call
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } hal_memtrack_default binder call
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app hal_audio_default mtk_hal_audio audioserver } su binder call
 
 # udp_socket
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } udp_socket { create connect }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } udp_socket { create connect }
 
 # tcp_socket
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } tcp_socket { read write create getattr connect getopt setopt }
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } port tcp_socket name_connect
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } tcp_socket { read write create getattr connect getopt setopt }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } port tcp_socket name_connect
 
 # chr_file
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { ioctl read write }
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } device chr_file { ioctl read write }
 allow { hal_audio_default mtk_hal_audio audioserver } device chr_file *
 allow init oem_device chr_file { read open }
 
 # property_service
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } { system_prop ffs_prop } property_service set
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } { system_prop ffs_prop } property_service set
 allow { hal_audio_default mtk_hal_audio audioserver qti_init_shell } default_prop property_service set
 
 # capability
@@ -106,7 +106,7 @@ allow init init capability2 block_suspend
 allow init init socket { read write }
 
 # filesystem
-allow { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } firmware_file filesystem getattr
+allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } firmware_file filesystem getattr
 
 # additional
 allow { hal_audio_default mtk_hal_audio audioserver } system_suspend_hwservice hwservice_manager find
@@ -122,7 +122,7 @@ allow { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir re
 allow { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
 allow { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 allow { hal_audio_default mtk_hal_audio audioserver } system_suspend binder call
-allow { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_30 untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
+allow { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write
 allow hal_audio_default hal_audio_default capability2 block_suspend
 allow mtk_hal_audio mtk_hal_audio capability2 block_suspend
 allow audioserver audioserver capability2 block_suspend

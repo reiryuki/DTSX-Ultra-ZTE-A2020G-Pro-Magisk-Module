@@ -9,10 +9,10 @@ if [ ! "$libdir" ]; then
     libdir=/system
   fi
 fi
-MODAEC=`find $MODPATH -type f -name *audio*effects*.conf`
-MODAEX=`find $MODPATH -type f -name *audio*effects*.xml`
-MODAP=`find $MODPATH -type f -name *policy*.conf -o -name *policy*.xml`
-MODAPX=`find $MODPATH -type f -name *policy*.xml`
+MODAECS=`find $MODPATH -type f -name *audio*effects*.conf`
+MODAEXS=`find $MODPATH -type f -name *audio*effects*.xml`
+MODAPS=`find $MODPATH -type f -name *policy*.conf -o -name *policy*.xml`
+MODAPXS=`find $MODPATH -type f -name *policy*.xml`
 
 # function
 archdir() {
@@ -75,7 +75,7 @@ RMVS="ring_helper alarm_helper music_helper voice_helper
       dlb_system_listener dlb_notification_listener"
 
 # setup audio effects conf
-if [ "$MODAEC" ]; then
+for MODAEC in $MODAECS; do
   for RMV in $RMVS; do
     sed -i "/^        $RMV {/ {;N s/        $RMV {\n        }//}" $MODAEC
     sed -i "s|$RMV { }||g" $MODAEC
@@ -163,10 +163,10 @@ output_session_processing {\
       sed -i "/^output_session_processing {/a\    music {\n    }" $MODAEC
     fi
   fi
-fi
+done
 
 # setup audio effects xml
-if [ "$MODAEX" ]; then
+for MODAEX in $MODAEXS; do
   for RMV in $RMVS; do
     sed -i "s|<apply effect=\"$RMV\"/>||g" $MODAEX
     sed -i "s|<apply effect=\"$RMV\" />||g" $MODAEX
@@ -261,7 +261,7 @@ if [ "$MODAEX" ]; then
       sed -i "/<postprocess>/a\        <stream type=\"music\">\n        <\/stream>" $MODAEX
     fi
   fi
-fi
+done
 
 # patch audio effects
 LIB=libdtsaudio.so
@@ -271,7 +271,7 @@ UUID=146edfc0-7ed2-11e4-80eb-0002a5d5c51b
 RMVS="$LIB $LIBNAME $NAME $UUID"
 archdir
 if [ "$ARCHDIR" ]; then
-  if [ "$MODAEC" ]; then
+  for MODAEC in $MODAECS; do
     remove_conf
     sed -i "/^libraries {/a\  $LIBNAME {\n    path \\$libdir\\$ARCHDIR\/soundfx\/$LIB\n  }" $MODAEC
     sed -i "/^effects {/a\  $NAME {\n    library $LIBNAME\n    uuid $UUID\n  }" $MODAEC
@@ -288,10 +288,10 @@ if [ "$ARCHDIR" ]; then
 #t    sed -i "/^    tts {/a\        $NAME {\n        }" $MODAEC
 #i    sed -i "/^    assistant {/a\        $NAME {\n        }" $MODAEC
 #c    sed -i "/^    call_assistant {/a\        $NAME {\n        }" $MODAEC
-#p    sed -i "/^    patch {/a\        $NAME {\n        }" $MODAEC
-#g    sed -i "/^    rerouting {/a\        $NAME {\n        }" $MODAEC
-  fi
-  if [ "$MODAEX" ]; then
+#x    sed -i "/^    patch {/a\        $NAME {\n        }" $MODAEC
+#x    sed -i "/^    rerouting {/a\        $NAME {\n        }" $MODAEC
+  done
+  for MODAEX in $MODAEXS; do
     remove_xml
     sed -i "/<libraries>/a\        <library name=\"$LIBNAME\" path=\"$LIB\"\/>" $MODAEX
     sed -i "/<effects>/a\        <effect name=\"$NAME\" library=\"$LIBNAME\" uuid=\"$UUID\"\/>" $MODAEX
@@ -308,19 +308,19 @@ if [ "$ARCHDIR" ]; then
 #t    sed -i "/<stream type=\"tts\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
 #i    sed -i "/<stream type=\"assistant\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
 #c    sed -i "/<stream type=\"call_assistant\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
-#p    sed -i "/<stream type=\"patch\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
-#g    sed -i "/<stream type=\"rerouting\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
-  fi
+#x    sed -i "/<stream type=\"patch\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
+#x    sed -i "/<stream type=\"rerouting\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
+  done
 fi
 
 # patch audio policy
-#uif [ "$MODAP" ]; then
+#ufor MODAP in $MODAPS; do
 #u  sed -i 's|RAW|NONE|g' $MODAP
 #u  sed -i 's|,raw||g' $MODAP
-#ufi
+#udone
 
 # patch audio policy xml
-if [ "$MODAPX" ]; then
+for MODAPX in $MODAPXS; do
   if ! grep -q 'format="AUDIO_FORMAT_DTS"' $MODAPX; then
     sed -i '/AUDIO_FORMAT_MP3/i\
                     <profile name="" format="AUDIO_FORMAT_DTS"\
@@ -333,7 +333,7 @@ if [ "$MODAPX" ]; then
                              samplingRates="32000,44100,48000,64000,88200,96000,128000,176400,192000"\
                              channelMasks="AUDIO_CHANNEL_OUT_MONO,AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_2POINT1,AUDIO_CHANNEL_OUT_QUAD,AUDIO_CHANNEL_OUT_PENTA,AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_6POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>' $MODAPX
   fi
-fi
+done
 
 
 
