@@ -50,7 +50,7 @@ allow { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untru
 allow { hal_audio_default mtk_hal_audio audioserver } system_file file { read open getattr execute ioctl lock }
 allow { hal_audio_default mtk_hal_audio audioserver } app_data_file file { ioctl read write open getattr }
 allow { hal_audio_default mtk_hal_audio audioserver } unlabeled file { read write create open getattr }
-allow { hal_audio_default mtk_hal_audio audioserver } vendor_data_file file { create unlink setattr open getattr }
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_data_file file { create unlink setattr read write open getattr }
 allow { hal_audio_default mtk_hal_audio audioserver } vendor_configs_file file { open getattr lock ioctl }
 allow { hal_audio_default mtk_hal_audio audioserver } vendor_file file { open read write ioctl lock }
 allow { hal_audio_default mtk_hal_audio audioserver } { sysfs sysfs_net system_data_file } file { read open getattr }
