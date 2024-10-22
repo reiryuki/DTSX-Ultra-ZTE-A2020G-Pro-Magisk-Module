@@ -270,6 +270,7 @@ done
 # patch audio effects
 LIB=libdtsaudio.so
 LIBNAME=dtsaudio
+NAME=dtsaudio
 NAME=dts_audio
 UUID=146edfc0-7ed2-11e4-80eb-0002a5d5c51b
 RMVS="$LIB $LIBNAME $NAME $UUID"
