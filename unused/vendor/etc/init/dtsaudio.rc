@@ -1,3 +1,7 @@
 on post-fs-data
     mkdir /data/vendor/audio/dts 0771 media audio
-    
+    copy /data/vendor/audio/dts/dts_audio_settings /data/vendor/audio/dts/temp
+    copy /vendor/etc/dts/dts_audio_settings /data/vendor/audio/dts/dts_audio_settings
+    copy /data/vendor/audio/dts/temp /data/vendor/audio/dts/dts_audio_settings
+    rm /data/vendor/audio/dts/temp
+    chown audioserver audio /data/vendor/audio/dts/dts_audio_settings
