@@ -293,8 +293,8 @@ if [ "$ARCHDIR" ]; then
 #t    sed -i "/^    tts {/a\        $NAME {\n        }" $MODAEC
 #i    sed -i "/^    assistant {/a\        $NAME {\n        }" $MODAEC
 #c    sed -i "/^    call_assistant {/a\        $NAME {\n        }" $MODAEC
-#x    sed -i "/^    patch {/a\        $NAME {\n        }" $MODAEC
-#x    sed -i "/^    rerouting {/a\        $NAME {\n        }" $MODAEC
+#p    sed -i "/^    patch {/a\        $NAME {\n        }" $MODAEC
+#g    sed -i "/^    rerouting {/a\        $NAME {\n        }" $MODAEC
   done
   for MODAEX in $MODAEXS; do
     remove_xml
@@ -313,8 +313,8 @@ if [ "$ARCHDIR" ]; then
 #t    sed -i "/<stream type=\"tts\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
 #i    sed -i "/<stream type=\"assistant\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
 #c    sed -i "/<stream type=\"call_assistant\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
-#x    sed -i "/<stream type=\"patch\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
-#x    sed -i "/<stream type=\"rerouting\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
+#p    sed -i "/<stream type=\"patch\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
+#g    sed -i "/<stream type=\"rerouting\">/a\            <apply effect=\"$NAME\"\/>" $MODAEX
   done
 fi
 

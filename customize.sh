@@ -64,17 +64,6 @@ else
 fi
 ui_print " "
 
-# sdk
-NUM=23
-if [ "$API" -lt $NUM ]; then
-  ui_print "! Unsupported SDK $API. You have to upgrade your"
-  ui_print "  Android version at least SDK $NUM to use this module."
-  abort
-else
-  ui_print "- SDK $API"
-  ui_print " "
-fi
-
 # architecture
 if [ "$ABILIST" ]; then
   ui_print "- $ABILIST architecture"
@@ -103,6 +92,17 @@ if ! echo "$ABILIST" | grep -q $NAME2; then
     ui_print "  Try to install via Magisk app instead"
     ui_print " "
   fi
+fi
+
+# sdk
+NUM=23
+if [ "$API" -lt $NUM ]; then
+  ui_print "! Unsupported SDK $API. You have to upgrade your"
+  ui_print "  Android version at least SDK $NUM to use this module."
+  abort
+else
+  ui_print "- SDK $API"
+  ui_print " "
 fi
 
 # recovery
@@ -402,13 +402,27 @@ if echo "$PROP" | grep -q c; then
   ui_print " "
 fi
 if [ "`grep_prop dts.game $OPTIONALS`" != 0 ]; then
-  sed -i 's|#x||g' $FILE
+  sed -i 's|#p||g' $FILE
+  sed -i 's|#g||g' $FILE
 else
   ui_print "- Does not use DTS Game rerouting & patch stream"
   ui_print " "
 fi
 
 # function
+file_check_system_for_vendor() {
+for FILE in $FILES; do
+  DESS="$SYSTEM$FILE $SYSTEM_EXT$FILE"
+  for DES in $DESS; do
+    if [ -f $DES ]; then
+      ui_print "- Detected"
+      ui_print "$DES"
+      rm -f $MODPATH/system/vendor$FILE
+      ui_print " "
+    fi
+  done
+done
+}
 file_check_vendor() {
 for FILE in $FILES; do
   DESS="$VENDOR$FILE $ODM$FILE"
@@ -424,18 +438,28 @@ done
 }
 
 # check
-FILES=/etc/media_codecs_dts_audio.xml
-file_check_vendor
 if [ "$IS64BIT" == true ]; then
-  FILES="/lib64/libomx-dts.so
+  FILES=/lib64/vndk-*/libsqlite.so
+  file_check_system_for_vendor
+fi
+if [ "$ABILIST32" ]; then
+  FILES=/lib/vndk-*/libsqlite.so
+  file_check_system_for_vendor
+fi
+if [ "$IS64BIT" == true ]; then
+  FILES="/lib64/libsqlite.so
+         /lib64/libomx-dts.so
          /lib64/libstagefright_soft_dtsdec.so"
   file_check_vendor
 fi
 if [ "$ABILIST32" ]; then
-  FILES="/lib/libomx-dts.so
+  FILES="/lib/libsqlite.so
+         /lib/libomx-dts.so
          /lib/libstagefright_soft_dtsdec.so"
   file_check_vendor
 fi
+FILES=/etc/media_codecs_dts_audio.xml
+file_check_vendor
 
 # directory
 if [ "$API" -le 25 ]; then
