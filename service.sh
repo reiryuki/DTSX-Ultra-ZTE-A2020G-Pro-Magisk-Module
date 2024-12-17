@@ -16,8 +16,7 @@ resetprop -n ro.dts.licensepath /vendor/etc/dts/
 resetprop -n ro.dts.cfgpath /vendor/etc/dts/
 resetprop -n ro.vendor.dts.licensepath /vendor/etc/dts/
 resetprop -n ro.vendor.dts.cfgpath /vendor/etc/dts/
-resetprop -n ro.feature.zte_feature_dts_ultra_enable true
-resetprop -n ro.feature.zte_dts_tuning_path P855A02_P
+resetprop -n ro.vendor.feature.zte_feature_dts_ultra_enable true
 resetprop -n ro.product.lge.globaleffect.dts false
 resetprop -n ro.lge.globaleffect.dts false
 resetprop -n ro.odm.config.dts_licensepath /vendor/etc/dts/

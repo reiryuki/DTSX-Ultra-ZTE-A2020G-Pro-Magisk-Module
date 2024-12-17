@@ -10,13 +10,14 @@
 - Changes/spoofs ro.build.product to P855A01 and ro.product.model to ZTE A2020G Pro which may break some system apps and features functionality
 
 ## Sources
-- https://dumps.tadiphone.dev/dumps/zte/p855a01 msmnile-user-9-PKQ1.190328.001-68-release-keys
-- offline_hptuning.db & dts-eagle.lic: https://github.com/C457/proprietary_vendor_zte_pine/tree/c22a26a9074dbf3f0bb6fbc43e7203531145d78e
+- https://dumps.tadiphone.dev/dumps/zte/p855a01 msmnile-user-11-RKQ1.201221.002-20211215.223102-release-keys
+- DtsUltra.apk: https://dumps.tadiphone.dev/dumps/zte/p855a01 msmnile-user-9-PKQ1.190328.001-68-release-keys
+- offline_hptuning.db in DtsUltra.apk & dts-eagle.lic: https://github.com/C457/proprietary_vendor_zte_pine/tree/c22a26a9074dbf3f0bb6fbc43e7203531145d78e
 - libdtsaudio.so: https://github.com/TadiT7/nubia_nx619j_dump/tree/76a9813a81f1973fcbff9dd21d53b6e9040a45f8
 - libmagiskpolicy.so: Kitsune Mask R6687BB53
 
 ## Screenshots
-- https://t.me/androidryukimodsdiscussions/3240
+- https://t.me/ryukimodsscreenshots/30
 
 ## Requirements
 - arm64-v8a or armeabi-v7a architecture
