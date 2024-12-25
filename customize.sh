@@ -189,7 +189,7 @@ done
 }
 
 # conflict
-NAMES="DTS_HPX DTSX_Ultra AudioWizard"
+NAMES="DTSSound DTS_HPX DTSX_Ultra AudioWizard"
 conflict
 
 # function
@@ -410,6 +410,19 @@ else
 fi
 
 # function
+file_check_apex_for_vendor() {
+for FILE in $FILES; do
+  DESS="/apex$FILE $SYSTEM/apex$FILE"
+  for DES in $DESS; do
+    if [ -f $DES ]; then
+      ui_print "- Detected"
+      ui_print "$DES"
+      rm -f $MODPATH/system/vendor$FILE
+      ui_print " "
+    fi
+  done
+done
+}
 file_check_system_for_vendor() {
 for FILE in $FILES; do
   DESS="$SYSTEM$FILE $SYSTEM_EXT$FILE"
@@ -438,6 +451,14 @@ done
 }
 
 # check
+if [ "$IS64BIT" == true ]; then
+  FILES=/*vndk*/lib64/libsqlite.so
+  file_check_apex_for_vendor
+fi
+if [ "$ABILIST32" ]; then
+  FILES=/*vndk*/lib/libsqlite.so
+  file_check_apex_for_vendor
+fi
 if [ "$IS64BIT" == true ]; then
   FILES=/lib64/vndk-*/libsqlite.so
   file_check_system_for_vendor
