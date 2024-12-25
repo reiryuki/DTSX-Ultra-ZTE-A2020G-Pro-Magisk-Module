@@ -5,3 +5,6 @@ on post-fs-data
     copy /data/vendor/audio/dts/temp /data/vendor/audio/dts/dts_audio_settings
     rm /data/vendor/audio/dts/temp
     chown audioserver audio /data/vendor/audio/dts/dts_audio_settings
+    setprop ro.vendor.dts.licensepath "/vendor/etc/dts/"
+    setprop ro.vendor.dts.cfgpath "/vendor/etc/dts/"
+    setprop vendor.dts.audio.allow_offload true
