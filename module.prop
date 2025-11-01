@@ -1,7 +1,7 @@
 id=DTSXUltra
 name=DTSX Ultra ZTE A2020G Pro
-version=v5.5
-versionCode=55
+version=v5.6
+versionCode=56
 author=Rei Ryuki the Fixer
 description=Equalizer post process type sound effect ported from ZTE A2020G Pro (P855A01) for any arm64-v8a or armeabi-v7a architecture, Android 6 (SDK 23) and up.
 
