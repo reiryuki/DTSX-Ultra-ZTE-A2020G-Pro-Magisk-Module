@@ -121,6 +121,7 @@ allow { hal_audio_default mtk_hal_audio audioserver } boot_status_prop file read
 allow { hal_audio_default mtk_hal_audio audioserver } debugfs_ion dir search
 allow { hal_audio_default mtk_hal_audio audioserver } { sysfs_net sysfs } dir read
 allow { hal_audio_default mtk_hal_audio audioserver } sysfs dir open
+allow { hal_audio_default mtk_hal_audio audioserver } vendor_diag-router unix_stream_socket connectto
 allow { hal_audio_default mtk_hal_audio audioserver } { diag_device vendor_diag_device } chr_file { read write open ioctl getattr }
 allow { hal_audio_default mtk_hal_audio audioserver } system_suspend binder call
 allow { hal_audio_default mtk_hal_audio audioserver } { system_app priv_app platform_app untrusted_app_29 untrusted_app_27 untrusted_app } fifo_file write

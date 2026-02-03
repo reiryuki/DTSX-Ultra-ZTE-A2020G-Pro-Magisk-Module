@@ -398,7 +398,7 @@ done
 APPS="`ls $MODPATH/system/priv-app`
       `ls $MODPATH/system/app`"
 hide_oat
-APPS="$APPS MusicFX DTSXULTRA AudioWizard"
+APPS="$APPS MusicFX DTSXULTRA AudioWizard DtsAudio"
 hide_app
 
 # stream mode
@@ -593,6 +593,7 @@ if [ "`grep_prop fix.vendor_overlay $OPTIONALS`" == 1 ]\
 fi
 
 # run
+MODSYSTEM=/system
 . $MODPATH/copy.sh
 . $MODPATH/.aml.sh
 
