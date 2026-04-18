@@ -16,6 +16,44 @@
 - libdtsaudio.so: https://github.com/TadiT7/nubia_nx619j_dump/tree/76a9813a81f1973fcbff9dd21d53b6e9040a45f8
 - libmagiskpolicy.so: Kitsune Mask R6687BB53
 
+## Changelog
+
+v5.8
+- Does not disable raw playback (You can use Audio Compatibility Patch Reborn Magisk Module instead)
+
+v5.7
+- Fix wrong target in latest KernelSU
+- Hide built-in DtsAudio.apk
+
+v5.6-R
+- Fix wrong file permissions in some ROMs
+
+v5.6
+- Tidy up aml.sh
+- Exclude audioeffectshaptic.xml
+- Abort installation if fail to mount mirror system
+
+v5.5
+- Improve /odm and /my_product support detection
+
+v5.4
+- Fix script bug at installation for libsqlite.so detections
+
+v5.3
+- Add Action button to clear apps caches
+- Fix architecture detection in some weird ROMs
+- Fix bug in uninstall.sh
+
+v5.2
+- Removes conflicted module
+- Detects vndk libsqlite.so in apex
+
+v5.1
+- Update some blobs from msmnile-user-11-RKQ1.201221.002-20211215.223102-release-keys
+
+v5.0
+- Fix missing libsqlite.so in SDK 35
+
 ## Screenshots
 - https://t.me/ryukimodsscreenshots/30
 
@@ -27,7 +65,7 @@
 
 ## Installation Guide & Download Link
 - If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs first
-- Install this module https://www.pling.com/p/1531642/ via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
+- Install this module via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards

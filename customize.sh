@@ -250,7 +250,8 @@ for NAME in $NAMES; do
    /persist/magisk/$NAME\
    /data/unencrypted/magisk/$NAME\
    /cache/magisk/$NAME\
-   /cust/magisk/$NAME
+   /cust/magisk/$NAME\
+   /klogdump/magisk/$NAME
 done
 }
 
@@ -572,15 +573,6 @@ if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
 resetprop -n ro.audio.monitorRotation true\
 resetprop -n ro.audio.monitorWindowRotation true' $FILE
   ui_print " "
-fi
-
-# raw
-FILE=$MODPATH/.aml.sh
-if [ "`grep_prop disable.raw $OPTIONALS`" == 0 ]; then
-  ui_print "- Does not disable Ultra Low Latency (Raw) playback"
-  ui_print " "
-else
-  sed -i 's|#u||g' $FILE
 fi
 
 # vendor_overlay

@@ -7,7 +7,7 @@ copy_dir_file() {
 }
 
 # audio file
-AUD="*audio*effects*.conf -o -name *audio*effects*.xml -o -name *policy*.conf -o -name *policy*.xml"
+AUD="*audio*effects*.conf -o -name *audio*effects*.xml -o -name *policy*.xml"
 rm -f `find $MODPATH -type f -name $AUD`
 FILES=`find /system /odm /my_product -type f -name $AUD`
 for FILE in $FILES; do
@@ -20,12 +20,5 @@ for FILE in $FILES; do
   copy_dir_file $FILE $MODFILE
 done
 rm -f `find $MODPATH -type f -name *policy*volume*.xml -o -name *audio*effects*spatializer*.xml -o -name *audio*effects*haptic*.xml`
-
-
-
-
-
-
-
 
 
