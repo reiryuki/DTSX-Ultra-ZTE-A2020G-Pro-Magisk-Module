@@ -14,9 +14,14 @@
 - DtsUltra.apk: https://dumps.tadiphone.dev/dumps/zte/p855a01 msmnile-user-9-PKQ1.190328.001-68-release-keys
 - offline_hptuning.db in DtsUltra.apk & dts-eagle.lic: https://github.com/C457/proprietary_vendor_zte_pine/tree/c22a26a9074dbf3f0bb6fbc43e7203531145d78e
 - libdtsaudio.so: https://github.com/TadiT7/nubia_nx619j_dump/tree/76a9813a81f1973fcbff9dd21d53b6e9040a45f8
-- libmagiskpolicy.so: Kitsune Mask R6687BB53
+- libmagiskpolicy.so: Magisk (stable) 30.7 (30700)
 
 ## Changelog
+
+v5.9
+- Support NoMount metamodule
+- Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700)
+- Move _uninstall.log to /data/adb/logs/
 
 v5.8
 - Does not disable raw playback (You can use Audio Compatibility Patch Reborn Magisk Module instead)
@@ -30,7 +35,7 @@ v5.6-R
 
 v5.6
 - Tidy up aml.sh
-- Exclude audioeffectshaptic.xml
+- Exclude \*audio\*effects\*haptic\*.xml
 - Abort installation if fail to mount mirror system
 
 v5.5
@@ -51,9 +56,6 @@ v5.2
 v5.1
 - Update some blobs from msmnile-user-11-RKQ1.201221.002-20211215.223102-release-keys
 
-v5.0
-- Fix missing libsqlite.so in SDK 35
-
 ## Screenshots
 - https://t.me/ryukimodsscreenshots/30
 
@@ -64,8 +66,8 @@ v5.0
 - Magisk or Kitsune Mask or KernelSU or Apatch installed
 
 ## Installation Guide & Download Link
-- If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs first
-- Install this module https://devuploads.com/kw2uc8brst91 via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
+- If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs or https://github.com/KernelSU-Modules-Repo/magic_mount_rs or https://github.com/KernelSU-Modules-Repo/hybrid_mount or https://github.com/maxsteeel/nomount first depending on ROM compatibility
+- Install this module via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards

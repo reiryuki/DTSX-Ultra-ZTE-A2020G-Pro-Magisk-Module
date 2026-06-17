@@ -11,6 +11,10 @@ if [ ! -d $MODPATH/vendor ]\
 || [ -L $MODPATH/vendor ]; then
   MODSYSTEM=/system
 fi
+MOD=/data/adb/modules/nomount
+NM=$MOD/bin/nm
+NOMOUNT=false
+[ ! -f $MOD/disable ] && [ -x $NM ] && $NM v >/dev/null 2>&1 && NOMOUNT=true
 
 # function
 permissive() {
@@ -23,9 +27,9 @@ fi
 magisk_permissive() {
 if [ "`toybox cat $FILE`" = 1 ]; then
   if [ -x "`command -v magiskpolicy`" ]; then
-	magiskpolicy --live "permissive *"
+    magiskpolicy --live "permissive *"
   else
-	$MODPATH/$ABI/libmagiskpolicy.so --live "permissive *"
+    $MODPATH/$ABI/libmagiskpolicy.so --live "permissive *"
   fi
 fi
 }
@@ -95,9 +99,15 @@ DIR=$MODPATH/system/odm
 FILES=`find $DIR -type f -name $AUD`
 for FILE in $FILES; do
   DES=/odm`echo $FILE | sed "s|$DIR||g"`
-  if [ -f $DES ]; then
-    umount $DES
-    mount -o bind $FILE $DES
+  RDES=`realpath $DES`
+  if [ -f $RDES ]; then
+    if $NOMOUNT; then
+      $NM del $RDES 2>/dev/null || true
+      $NM add $RDES $FILE
+    else
+      umount $RDES
+      mount -o bind $FILE $RDES
+    fi
   fi
 done
 }
@@ -106,9 +116,15 @@ DIR=$MODPATH/system/my_product
 FILES=`find $DIR -type f -name $AUD`
 for FILE in $FILES; do
   DES=/my_product`echo $FILE | sed "s|$DIR||g"`
-  if [ -f $DES ]; then
-    umount $DES
-    mount -o bind $FILE $DES
+  RDES=`realpath $DES`
+  if [ -f $RDES ]; then
+    if $NOMOUNT; then
+      $NM del $RDES 2>/dev/null || true
+      $NM add $RDES $FILE
+    else
+      umount $RDES
+      mount -o bind $FILE $RDES
+    fi
   fi
 done
 }
